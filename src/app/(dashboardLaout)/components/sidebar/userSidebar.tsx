@@ -11,7 +11,7 @@ import { CollapseItems } from "./collapse-items";
 import { useSidebarContext } from "../../layout/layout-context";
 
 
-export const SidebarWrapper = () => {
+export const UserSidebarWrapper = () => {
   const pathname = usePathname();
   const { collapsed } = useSidebarContext();
 
@@ -36,15 +36,21 @@ export const SidebarWrapper = () => {
             <SidebarItem
               title="Home"
               icon={<Home />}
-              isActive={pathname === "/dashboard"}
-              href="/dashboard"
+              isActive={pathname === "/user-dashboard"}
+              href="/user-dashboard"
             />
             <SidebarMenu title="Main Menu">
               <SidebarItem
-                isActive={pathname === "/dashboard/rent-car"}
-                title="rent-car"
+                isActive={pathname === "/user-dashboard/profile"}
+                title="profile"
                 icon={<Car />}
-                href="/dashboard/rent-car"
+                href="/user-dashboard/profile"
+              />
+              <SidebarItem
+                isActive={pathname === "/user-dashboard/create-post"}
+                title="create-post"
+                icon={<Car />}
+                href="/user-dashboard/create-post"
               />
               <SidebarItem
                 isActive={pathname === "/dashboard/payments"}

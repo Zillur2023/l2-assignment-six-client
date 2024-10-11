@@ -1,67 +1,78 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/rules-of-hooks */
+
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { decode } from "./helpers/jwtHelpers";
+// import { useAppSelector } from "./app/redux/hooks";
+// import { RootState } from "./app/redux/store";
+// import { useAppSelector } from "./app/redux/hooks";
 
 const authRoutes = ["/login", "/register"];
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+//   // const {user} = useAppSelector((state:RootState) => state.auth)
+//   // console.log('user',user)
+//   const { pathname } = request.nextUrl;
 
-  console.log(pathname, "pathname");
+//   console.log(pathname, "pathname");
 
-  //pathname , acessToken
+//   // pathname , acessToken
 
-  //pathname = admin-dashboard -> accessToken = admin -> admin-dashboard &&
-  //pathname = admin-dashboard -> accessToken = user -> home page
+//   // pathname = admin-dashboard -> accessToken = admin -> admin-dashboard &&
+//   // pathname = admin-dashboard -> accessToken = user -> home page
 
-  const accessToken = cookies().get("accessToken")?.value;
+//   const accessToken = cookies().get("accessToken")?.value;
 
-  if (!accessToken) {
-    //Protecting hybrid routes
-    if (authRoutes.includes(pathname)) {
-      return NextResponse.next();
-    } else {
-      //   return NextResponse.redirect(new URL("/login", request.url));
-      return NextResponse.redirect(
-        new URL(
-          pathname ? `/login?redirect=${pathname}` : "/login",
-          request.url
-        )
-      );
-    }
-  }
+//   if (!accessToken) {
+//     //Protecting hybrid routes
+//     if (authRoutes.includes(pathname)) {
+//       return NextResponse.next();
+//     } else {
+//       //   return NextResponse.redirect(new URL("/login", request.url));
+//       return NextResponse.redirect(
+//         new URL(
+//           pathname ? `/login?redirect=${pathname}` : "/login",
+//           request.url
+//         )
+//       );
+//     }
+//   }
 
-  //Role based authorization
+//   // Role based authorization
 
-  let decodedToken = null;
+//   let decodedToken = null;
 
-  decodedToken = decode(accessToken) as any;
+//   decodedToken = decode(accessToken) as any;
 
-  console.log(decodedToken, "decodedToken");
+//   // console.log(decodedToken, "decodedToken");
+  
+//   const role = decodedToken?.role;
+  
+//   console.log("middleware---> User", role)
+//   // const role = "admin"
+//   // const role = "user"
+//   // const role = undefined
 
-  const role = decodedToken?.role;
+//   // console.log(role, "role");
+//   // console.log(pathname, "pathname");
 
-  console.log(role, "role");
-  console.log(pathname, "pathname");
+//   // /admin-dashboard - ok
+//   // /admin-dashboard/car-management - ok
+//   if (role === "admin" && pathname.match(/^\/admin-dashboard/)) {
+//     return NextResponse.next();
+//   }
 
-  // /admin-dashboard - ok
-  // /admin-dashboard/car-management - ok
-  if (role === "admin" && pathname.match(/^\/admin-dashboard/)) {
-    return NextResponse.next();
-  }
+//   // /dashboard , /dashboard/my-requested-rides , /profile
+//   if (role === "user" && pathname.match(/^\/user-dashboard/)) {
+//     return NextResponse.next();
+//   }
+//   if (role === "user" && pathname === "/profile") {
+//     return NextResponse.next();
+//   }
 
-  // /dashboard , /dashboard/my-requested-rides , /profile
-  if (role === "user" && pathname.match(/^\/user-dashboard/)) {
-    return NextResponse.next();
-  }
-  if (role === "user" && pathname === "/profile") {
-    return NextResponse.next();
-  }
+//   return NextResponse.redirect(new URL("/", request.url));
 
-  return NextResponse.redirect(new URL("/", request.url));
-
-  //decodedToken.role
+//   //decodedToken.role
 }
 
 //!accessToken -> /login -> jete dao

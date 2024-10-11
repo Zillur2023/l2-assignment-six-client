@@ -5,22 +5,28 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Switch,
 } from "@nextui-org/react";
 // import { Cog } from "lucide-react";
 import Link from "next/link";
 import { ThemeSwitcher } from "./ThemSwitcher";
-// import { ThemeSwitcher } from "./ThemeSwitcher";
-// import { ThemeSwitcher } from "./ThemeSwitcher";
+// import { useAppSelector } from "@/app/redux/hooks";
+// import { RootState } from "@/app/redux/store";
+import {useAppSelector} from "../../../../redux/hooks"
+import {RootState} from "../../../../redux/store"
+// import { logout } from "@/app/redux/features/auth/authSlice";
+// import {logout} from "../../../../redux/features/auth/authSlice"
+
 export default function NavBar() {
-    const user = {name:"zillur"}
+  const {user} = useAppSelector((state:RootState) => state.auth)
+  console.log('user',user)
   const routeMap: Record<string, string> = {
-    user: "/dashboard",
+    user: "/user-dashboard",
     admin: "/dashboard/admin",
-    driver: "/dashboard/driver",
   };
 
   return (
+   <>
+  { !user? 
     <Navbar maxWidth="2xl">
     <NavbarBrand>
       <Link className="flex" href="/">
@@ -31,8 +37,13 @@ export default function NavBar() {
 
     <NavbarContent className="hidden sm:flex gap-4" justify="center">
       <NavbarItem>
-        <Link color="foreground" href="/cars">
-          Cars
+        <Link color="foreground" href="/register">
+          Register
+        </Link>
+      </NavbarItem>
+      <NavbarItem>
+        <Link color="foreground" href="/login">
+          Login
         </Link>
       </NavbarItem>
       <NavbarItem isActive>
@@ -52,7 +63,7 @@ export default function NavBar() {
 
       {/* {user ? (
         <NavbarItem>
-          <Button onClick={logOutUser} color="primary" variant="flat">
+          <Button onClick={logout} color="primary" variant="flat">
             Logout
           </Button>
         </NavbarItem>
@@ -62,6 +73,7 @@ export default function NavBar() {
         </NavbarItem>
       )} */}
     </NavbarContent>
-  </Navbar>
+  </Navbar> : user.role === "admin" ? routeMap.admin : routeMap.user}
+   </>
   );
 }

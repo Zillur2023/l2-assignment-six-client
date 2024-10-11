@@ -1,22 +1,21 @@
 import type { Metadata } from "next";
-import NavBar from "./components/page/shared/Navbar";
-import Footer from "./components/page/shared/Footer";
+import { AdminLayout } from "./layout/adminLayout";
 
 export const metadata: Metadata = {
-  title: "Apollo Gears",
+  title: "Dashboard - Apollo Gears",
   description: "Next Level Riding Sharing Service",
 };
 
-export default function DashboardLayout({
+export default function AdminDashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <div>
-      <NavBar />
+     <AdminLayout>
       {children}
-      <Footer />
+     </AdminLayout>
     </div>
   );
 }

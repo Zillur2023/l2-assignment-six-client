@@ -1,9 +1,9 @@
-
-
 // import { logOut } from "@/app/(withComonLayout)/actions/auth";
 // import { useAuth } from "@/lib/AuthProviders";
 // import { ThemeSwitcher } from "@/app/(commonLayout)/components/page/shared/ThemeSwitcher";
-import { ThemeSwitcher } from "@/app/(commonLayout)/compunents/page/shared/ThemSwitcher";
+import { ThemeSwitcher } from "@/app/(commonLayout)/components/page/shared/ThemSwitcher";
+// import { logout } from "@/app/redux/features/auth/authSlice";
+import { logout } from "../../../redux/features/auth/authSlice";
 import {
   Avatar,
   Dropdown,
@@ -12,16 +12,27 @@ import {
   DropdownTrigger,
   NavbarItem,
 } from "@nextui-org/react";
-
+import { useRouter } from "next/navigation";
+// import { useAppDispatch } from "@/app/redux/hooks";
+import { useAppDispatch } from "../../../redux/hooks";
+// import Cookies from 'js-cookie';
 
 export const UserDropdown = () => {
-//   const router = useRouter();
-//   const {user,setUser} = useAuth();
-//   const logOutUser = async () => {
-//     await logOut();
-//     setUser(null)
-//     router.push("/")
-//   };
+  const dispatch = useAppDispatch()
+
+
+    const router = useRouter();
+    // const {user,setUser} = useAuth();
+    const allCookies = document.cookie
+    console.log({allCookies})
+    const logOutUser = async () => {
+      // Cookies.remove('accessToken'); // Removes accessToken cookie
+    
+      dispatch(logout())
+      // await logOut();
+      // setUser(null)
+      router.push("/")
+    };
   return (
     <Dropdown>
       <NavbarItem>
@@ -52,7 +63,8 @@ export const UserDropdown = () => {
         <DropdownItem key="configurations">Configurations</DropdownItem>
         <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
         <DropdownItem
-        //   onClick={() => logOutUser()}
+            onClick={() => logOutUser()}
+            // onClick={() => logout()}
           key="logout"
           color="danger"
           className="text-danger "
@@ -60,7 +72,7 @@ export const UserDropdown = () => {
           Log Out
         </DropdownItem>
         <DropdownItem key="switch">
-          <ThemeSwitcher/>
+          <ThemeSwitcher />
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>
