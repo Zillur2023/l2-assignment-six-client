@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'; // Import Next.js image component for optimization
-import { Button } from '@nextui-org/react'; // Import only NextUI Button
+import { Button, useDisclosure } from '@nextui-org/react'; // Import only NextUI Button
 import { ThumbsUp, ThumbsDown , MessageCircle, Share2 } from 'lucide-react'; // Import Lucide-react icons
 import { RootState } from '../../../redux/store';
 import { useGetUserQuery } from '../../../redux/features/user/userApi';
@@ -9,6 +9,7 @@ import { useAppSelector } from "../../../redux/hooks";
 // import { useGetAllPostQuery } from '@/app/redux/features/post/postApi';
 import { useGetAllPostQuery, useUpdateDownvoteMutation, useUpdateUpvoteMutation } from '../../../redux/features/post/postApi';
 import { useState } from 'react';
+import CommentModal from '../comment/CommentModal';
 
 const Posts = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
@@ -20,6 +21,8 @@ const Posts = () => {
   // console.log({posts})
   const [updateUpvote] = useUpdateUpvoteMutation();
   const [updateDownvote] = useUpdateDownvoteMutation();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure(); // Using useDisclosure
+  const [postIdForComment, setPostIdForComment] = useState<string | null>(null);
 
   const handleUpvote = async (postId:string) => {
   
@@ -42,7 +45,10 @@ const Posts = () => {
         console.log({downvote})
   };
 
-  // const [posts, setPosts] = useState([]);
+  const handleCommentClick = (postId: string) => {
+    setPostIdForComment(postId); // Set the postId for which the comment is being created
+    onOpen(); // Open the modal using the disclosure hook
+  };
 
   return (
     <div className="mt-6">
@@ -75,9 +81,9 @@ const Posts = () => {
               <span>{(post.downvotes.length) ?+1:""}</span>
             </Button>
 
-            <Button auto light size="sm" className="flex items-center space-x-2">
+            <Button auto light size="sm"  onClick={() => handleCommentClick(post?._id)} className="flex items-center space-x-2">
               <MessageCircle size={18} />
-              <span>{post.comments}</span>
+              <span>{(post.comments.length) ?+1:""}</span>
             </Button>
 
             <Button auto light size="sm" className="flex items-center space-x-2">
@@ -87,6 +93,14 @@ const Posts = () => {
           </div>
         </div>
       ))}
+        {/* Comment Modal */}
+        {postIdForComment && (
+        <CommentModal
+          postId={postIdForComment}
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+        />
+      )}
     </div>
   );
 };

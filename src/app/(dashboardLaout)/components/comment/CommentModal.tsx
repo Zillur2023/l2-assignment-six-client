@@ -11,24 +11,20 @@ import {
   Button,
   Input,
 } from "@nextui-org/react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import { useForm, Controller } from "react-hook-form";
-// import { useCreatePostMutation } from '@/app/redux/features/post/postApi';
-import { useCreatePostMutation } from "../../../redux/features/post/postApi";
-// import { useAppSelector } from '@/app/redux/hooks';
 import { RootState } from "../../../redux/store";
 import { useGetUserQuery } from "../../../redux/features/user/userApi";
 import { useAppSelector } from "../../../redux/hooks";
+import { useCreateCommentMutation } from "../../../redux/features/comment/commentApi";
 
 interface CreatePostModalProps {
+  postId:string
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
 }
 
-const categories = ["Adventure", "Business Travel", "Exploration"];
-
-const PostModal: React.FC<CreatePostModalProps> = ({
+const CommentModal: React.FC<CreatePostModalProps> = ({
+  postId,
   isOpen,
   onOpenChange,
 }) => {
@@ -36,23 +32,16 @@ const PostModal: React.FC<CreatePostModalProps> = ({
   const { data: userData } = useGetUserQuery(user?.email, {
     skip: !user?.email,
   });
-  const [createPost] = useCreatePostMutation();
+  const [createComment] = useCreateCommentMutation()
   const { control, handleSubmit } = useForm();
 
   const onSubmit = async (data: any) => {
-    const tempElement = document.createElement("div");
-    tempElement.innerHTML = data.content; // Set the HTML content
-    const plainText = tempElement.textContent || tempElement.innerText || ""; // Get the plain text
-
-    console.log({ content: plainText }); // Log the plain text
     const updatedData = {
       ...data, // Spread the existing data
-      title: "zillur",
-      author: userData?.data?._id,
-      content: plainText, // Override the content with plain text
+      userId: userData?.data?._id,
     };
     console.log({ updatedData });
-    const res = await createPost(updatedData).unwrap();
+    const res = await createComment(updatedData).unwrap();
     console.log({ res });
     onOpenChange(false); // Close modal after submission
   };
@@ -63,24 +52,24 @@ const PostModal: React.FC<CreatePostModalProps> = ({
         {(onClose) => (
           <>
             <ModalHeader className="flex flex-col gap-1">
-              Create a New Post
+              {/* Create a Comment */}
             </ModalHeader>
             <ModalBody>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               
 
-                {/* Image Input with Controller */}
+                {/* Comment Input with Controller */}
                 <div>
-                  <label htmlFor="image">Attach Image</label>
+                  <label htmlFor="commentText">Comment</label>
                   <Controller
-                    name="image"
+                    name="commentText"
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
                       <Input
                         {...field}
                         type="text"
-                        placeholder="Image URL"
+                        placeholder="Comment"
                         onChange={(e) => field.onChange(e.target.value)}
                       />
                     )}
@@ -103,4 +92,4 @@ const PostModal: React.FC<CreatePostModalProps> = ({
   );
 };
 
-export default PostModal;
+export default CommentModal;
