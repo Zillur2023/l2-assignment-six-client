@@ -11,7 +11,14 @@ export const authApi = baseApi.injectEndpoints({
         }),
         invalidatesTags: ["Comment"]
       }),
+      getAllComment: builder.query({
+        query: (postId) => ({
+          url: `/comment/all-comment/${postId}`,
+          method: 'GET',
+        }),
+        providesTags: ["Comment"]
+      }),
     }),
   });
   
-  export const { useCreateCommentMutation } = authApi;
+  export const { useCreateCommentMutation, useGetAllCommentQuery } = authApi;
