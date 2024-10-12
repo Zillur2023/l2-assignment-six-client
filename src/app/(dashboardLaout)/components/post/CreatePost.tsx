@@ -1,9 +1,9 @@
 // PostCreator.tsx
-'use client';
+"use client";
 
-import React from 'react';
-import { Button, useDisclosure } from '@nextui-org/react';
-import CreatePostModal from './CreatePostModal'; // Adjust the import path accordingly
+import React from "react";
+import { Button, useDisclosure } from "@nextui-org/react";
+import PostModal from "./PostModal";
 
 const PostCreate: React.FC = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -13,7 +13,7 @@ const PostCreate: React.FC = () => {
       <Button auto onPress={onOpen}>
         Create Post
       </Button>
-      <CreatePostModal isOpen={isOpen} onOpenChange={onOpenChange} />
+      <PostModal isOpen={isOpen} onOpenChange={onOpenChange} />
     </div>
   );
 };

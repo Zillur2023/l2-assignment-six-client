@@ -1,15 +1,14 @@
-import React from 'react'
-import CreatePost from '../../components/profile/CreatePost'
-import CreatePostModal from '../../components/profile/CreatePostModal'
+import React from "react";
+import CreatePost from "../../components/post/CreatePost";
+import PostModal from "../../components/post/PostModal";
 
 const CreatePostPage = () => {
   return (
     <>
-    THis is new Bangladesh
-
-    <CreatePost/>
+      THis is new Bangladesh
+      <CreatePost />
     </>
-  )
-}
+  );
+};
 
-export default CreatePostPage
+export default CreatePostPage;
