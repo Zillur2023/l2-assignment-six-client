@@ -1,32 +1,28 @@
 'use client'
 
 import Image from 'next/image'; // Import Next.js image component for optimization
-import { Button, useDisclosure } from '@nextui-org/react'; // Import only NextUI Button
+import { Button } from '@nextui-org/react'; // Import only NextUI Button
 import { ThumbsUp, ThumbsDown , MessageCircle, Share2 } from 'lucide-react'; // Import Lucide-react icons
 import { RootState } from '../../../redux/store';
 import { useGetUserQuery } from '../../../redux/features/user/userApi';
 import { useAppSelector } from "../../../redux/hooks";
-// import { useGetAllPostQuery } from '@/app/redux/features/post/postApi';
-import { useGetAllPostQuery, useUpdateDownvoteMutation, useUpdateUpvoteMutation } from '../../../redux/features/post/postApi';
-import { useEffect, useState } from 'react';
-import CommentModal from '../comment/CommentModal';
+import { useUpdateDownvoteMutation, useUpdateUpvoteMutation } from '../../../redux/features/post/postApi';
 
-interface PostsProps {
-  postId?: string; // Accept postId as an optional prop
-  refetch: () => void; // New prop to trigger post data refetch
+
+interface CommentPostProps {
+  postsData: () => void; // New prop to trigger post data refetch
 }
 
-const Posts = () => {
+const CommentPost = ({ postsData }: CommentPostProps) => {
+  console.log({postsData})
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { data: userData } = useGetUserQuery(user?.email, { skip: !user?.email });
-  const { data: postsData, refetch } = useGetAllPostQuery('');
-  // console.log({postsData})
+
   // const { data: postsData, refetch } = useGetAllPostQuery('');
 
   const [updateUpvote] = useUpdateUpvoteMutation();
   const [updateDownvote] = useUpdateDownvoteMutation();
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [postIdForComment, setPostIdForComment] = useState<string | null>(null);
+
 
   const handleUpvote = async (postId: string) => {
     const postData = { userId: userData?.data?._id, postId };
@@ -39,19 +35,6 @@ const Posts = () => {
     const downvote = await updateDownvote(postData).unwrap();
     console.log({ downvote });
   };
-
-  const handleCommentClick = (postId: string) => {
-    refetch(); // Refetch posts after a comment is added
-    setPostIdForComment(postId);
-    onOpen();
-  };
-  useEffect(() => {
-    refetch(); // Refetch post data when the component mounts
-  }, [ refetch]); // Add postId as a dependency if it might change
-
-  // const handlePostComment = () => {
-  //   refetch(); // Refetch posts after a comment is added
-  // };
 
   return (
     <div className="mt-6">
@@ -80,7 +63,7 @@ const Posts = () => {
               <ThumbsDown size={18} />
               <span>{post.downvotes.length}</span>
             </Button>
-            <Button auto light size="sm" onClick={() => handleCommentClick(post?._id)} className="flex items-center space-x-2">
+            <Button auto light size="sm" className="flex items-center space-x-2">
               <MessageCircle size={18} />
               <span>{post?.comments?.length}</span>
             </Button>
@@ -92,18 +75,11 @@ const Posts = () => {
         </div>
       ))}
 
-      {postIdForComment && (
-        <CommentModal
-          postId={postIdForComment}
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
-          postsRefetch={refetch} // Pass the refetch handler to CommentModal
-        />
-      )}
+  
     </div>
   );
 };
 
-export default Posts
+export default CommentPost
 
 

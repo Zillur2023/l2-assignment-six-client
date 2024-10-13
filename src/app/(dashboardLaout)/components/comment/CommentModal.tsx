@@ -14,23 +14,27 @@ import { useAppSelector } from '../../../redux/hooks';
 import { RootState } from '../../../redux/store';
 import { useGetUserQuery } from '../../../redux/features/user/userApi';
 import { useCreateCommentMutation, useGetAllCommentQuery } from '../../../redux/features/comment/commentApi';
-import Posts from '../post/Posts';
+import { useGetAllPostQuery } from '../../../redux/features/post/postApi';
+
+import CommentPost from './CommentPost';
+import { X } from 'lucide-react'; // Import the X icon for the close button
 
 interface CommentModalProps {
   postId: string;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  onPostComment: () => void; // New prop to trigger post data refetch
+  postsRefetch: () => void; // New prop to trigger post data refetch
 }
 
 const CommentModal: React.FC<CommentModalProps> = ({
   postId,
   isOpen,
   onOpenChange,
-  onPostComment, // Accept the new prop
+  postsRefetch
 }) => {
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { data: userData } = useGetUserQuery(user?.email, { skip: !user?.email });
+  const { data: postsData, refetch } = useGetAllPostQuery(postId);
   const { control, handleSubmit, reset, watch } = useForm();
   const [createComment] = useCreateCommentMutation();
   const { data: allCommentData } = useGetAllCommentQuery(postId);
@@ -45,15 +49,15 @@ const CommentModal: React.FC<CommentModalProps> = ({
     };
     await createComment(updatedData).unwrap();
     reset();
-    onOpenChange(false); // Close the modal
-    onPostComment(); // Refetch the posts
+    refetch(); // Refetch the posts
+    postsRefetch();
   };
 
   return (
     <Modal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      className="flex flex-col justify-between h-full"
+      className="flex flex-col justify-between h-full relative" // Added relative position to modal
     >
       <ModalContent>
         <ModalHeader className="sticky top-0 bg-white z-10 p-4 shadow-md">
@@ -61,13 +65,20 @@ const CommentModal: React.FC<CommentModalProps> = ({
             <Avatar src={userData?.data?.avatar} alt="User Avatar" />
             <p>{userData?.data?.name}</p>
           </div>
+            {/* Close Icon */}
+            <div
+            className="absolute right-4 top-4 cursor-pointer z-20"
+            onClick={() => onOpenChange(false)} // Close the modal
+          >
+            <X size={24} />
+          </div>
         </ModalHeader>
 
         {/* Modal body for showing post and comments */}
         <ModalBody className="flex-1 overflow-y-auto px-4">
           {/* Post content */}
           <div className="mb-4">
-            <Posts postId={postId} />
+            <CommentPost postsData={postsData} />
           </div>
 
           {/* Comments Section */}
@@ -103,7 +114,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                 />
               )}
             />
-               <Button
+            <Button
               auto
               type="submit"
               color={commentText ? 'primary' : 'default'} // Use default color when disabled
