@@ -3,7 +3,15 @@
 "use client";
 import { useState } from "react";
 // import Image from "next/image";
-import { Button, Card, CardBody, CardFooter, CardHeader, Image, Tooltip } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Image,
+  Tooltip,
+} from "@nextui-org/react";
 import {
   ThumbsUp,
   ThumbsDown,
@@ -31,7 +39,7 @@ import { allCategoryName } from "./constant";
 import Author from "../shared/Author";
 import PostUpdate from "./PostUpdate";
 import CustomModal from "../modal/CustomModal";
-import LoadingButton from "../shared/LoadingButton";
+import CustomButton from "../shared/CustomButton";
 import { IPost } from "@/type";
 
 interface PostsProps {
@@ -58,13 +66,12 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
         sortBy,
       };
   const { data: postsData } = useGetAllPostQuery(queryPost);
-  console.log({userData})
-  console.log({postsData})
+  console.log({ userData });
+  console.log({ postsData });
   const [updateUpvote] = useUpdateUpvoteMutation();
   const [updateDownvote] = useUpdateDownvoteMutation();
   const [updateFollowUnfollow] = useUpdateFollowUnfollowMutation();
   const [deletePost] = useDeletePostMutation();
- 
 
   const handleUpvote = async (postId: string) => {
     if (!userData?.data?._id) {
@@ -171,19 +178,19 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
 
       {postsData?.data?.map((post: IPost) => (
         <Card key={post._id} isFooterBlurred className=" w-full">
-           {/* Author Info */}
-           <CardHeader className=" justify-between ">
+          {/* Author Info */}
+          <CardHeader className=" justify-between ">
             <Author author={post?.author} nameClass="text-lg font-semibold" />
             <div className="flex items-center gap-3">
               {post?.author?._id !== userData?.data?._id && (
-                <LoadingButton
-                  onClick={() =>handleUpdateFollowUnfollow(post?.author?._id )}
+                <CustomButton
+                  onClick={() => handleUpdateFollowUnfollow(post?.author?._id)}
                   buttonId="followOrUnfollow"
                 >
                   {userData?.data?.following?.includes(post?.author?._id)
                     ? "Unfollow"
                     : "Follow"}
-                </LoadingButton>
+                </CustomButton>
               )}
               {post?.author?._id === userData?.data?._id && (
                 <PostUpdate updatePostData={post} />
@@ -195,7 +202,7 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
                     <Trash2 className="text-red-500 cursor-pointer" />
                   }
                   actionButtonText="Delete"
-                  onUpdate={() => handleDeleteClick(post?._id )}
+                  onUpdate={() => handleDeleteClick(post?._id)}
                 >
                   <Author
                     author={post?.author}
@@ -211,88 +218,73 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
               )}
             </div>
           </CardHeader>
-         <CardBody>
-          <p className=" py-2">#{post?.category} </p>
-           {/* Post Title */}
-           <p className=" mb-2">{post?.title}</p>
-       
-         
+          <CardBody>
+            <p className=" py-2">#{post?.category} </p>
+            {/* Post Title */}
+            <p className=" mb-2">{post?.title}</p>
 
-          {/* Post Image */}
-          {post.image && (
-                <div className=" w-full h-[250px] flex justify-center items-center ">
-                    <Image
-              shadow="sm"
-              radius="lg"
-              width="100%"
-              height={250}
-              alt={post?.category}
-              // className=" object-cover "
-              src={post?.image}
-            />
-                </div>
-             
-          )}
+            {/* Post Image */}
+            {post.image && (
+              <div className=" w-full h-[250px] flex justify-center items-center ">
+                <Image
+                  shadow="sm"
+                  radius="lg"
+                  width="100%"
+                  height={250}
+                  alt={post?.category}
+                  // className=" object-cover "
+                  src={post?.image}
+                />
+              </div>
+            )}
 
-          {/* Post Content */}
-          <p className="mb-6 text-gray-700">{post.content}</p>
+            {/* Post Content */}
+            <p className="mb-6 text-gray-700">{post.content}</p>
           </CardBody>
 
-        <CardFooter className="justify-between ">
+          <CardFooter className="justify-between ">
             {/* Post Interactions */}
             <div className="">
               {/* <Tooltip content={post?.upvotes?.[index+1]?.name}> */}
-              <Tooltip
-                content={
-                  <div className="whitespace-pre-wrap">
-                    {post?.upvotes
-                      .map((upvote: any) => upvote?.name)
-                      .join("\n")}
-                  </div>
-                }
-                placement="bottom"
-              >
-                <LoadingButton
+            
+                <CustomButton
                   onClick={() => handleUpvote(post._id)}
                   buttonId="upvote"
+                  data={post?.upvotes}
                 >
-                    <ThumbsUp
-    size={18}
-    className={`${
-      post?.upvotes?.some(item => (item?._id) === (userData?.data?._id))
-        ? "text-blue-600 fill-current"
-        : "text-gray-600"
-    }`}
-  />
-                
+                  <ThumbsUp
+                    size={18}
+                    className={`${
+                      post?.upvotes?.some(
+                        (item) => item?._id === userData?.data?._id
+                      )
+                        ? "text-blue-600 fill-current"
+                        : "text-gray-600"
+                    }`}
+                  />
+
                   <span>{post.upvotes.length}</span>
-                </LoadingButton>
-              </Tooltip>
-              </div>
-              <div> 
-              <Tooltip
-                content={
-                  <div className="whitespace-pre-wrap">
-                    {post?.downvotes
-                      .map((downvote: any) => downvote?.name)
-                      .join("\n")}
-                  </div>
-                }
-                placement="bottom"
-              >
-                <LoadingButton
+                </CustomButton>
+            </div>
+            <div>
+            
+                <CustomButton
                   onClick={() => handleDownvote(post._id)}
                   buttonId="downvote"
+                  data={post?.downvotes}
                 >
-                  <ThumbsDown  size={18}
-    className={`${
-      post?.downvotes?.some(item => (item?._id) === (userData?.data?._id))
-        ? "text-blue-600 fill-current"
-        : "text-gray-600"
-    }`} />
+                  <ThumbsDown
+                    size={18}
+                    className={`${
+                      post?.downvotes?.some(
+                        (item) => item?._id === userData?.data?._id
+                      )
+                        ? "text-blue-600 fill-current"
+                        : "text-gray-600"
+                    }`}
+                  />
                   <span>{post.downvotes.length}</span>
-                </LoadingButton>
-              </Tooltip>
+                </CustomButton>
             </div>
 
             <div className="">
@@ -312,17 +304,17 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
                   <span>{post.comments?.length}</span>
                 </button>
               )}
-              </div>
-              <div>
+            </div>
+            <div>
               <Button
                 size="sm"
                 className="flex items-center space-x-2 bg-transparent hover:bg-gray-300 "
               >
                 <Share2 size={18} />
-                <span>{post.shares}</span>
+                {/* <span>{post.shares}</span> */}
               </Button>
             </div>
-        </CardFooter>
+          </CardFooter>
         </Card>
       ))}
     </div>
