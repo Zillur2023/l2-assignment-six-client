@@ -8,6 +8,7 @@ interface LoadingButtonProps {
   buttonId: string; // Unique identifier for each button
   children: ReactNode;
   data?: IUser[];
+  btnClass?: string
 }
 
 const CustomButton: React.FC<LoadingButtonProps> = ({
@@ -15,6 +16,7 @@ const CustomButton: React.FC<LoadingButtonProps> = ({
   buttonId,
   children,
   data,
+  btnClass
 }) => {
   const [loadingStates, setLoadingStates] = useState<{
     [key: string]: boolean;
@@ -33,7 +35,7 @@ const CustomButton: React.FC<LoadingButtonProps> = ({
 
   return (
     <>
-      {data.length ? (
+      {data?.length ? (
         <Tooltip
           content={
             <div className="whitespace-pre-wrap">
@@ -46,7 +48,7 @@ const CustomButton: React.FC<LoadingButtonProps> = ({
             size="sm"
             onClick={handleClick}
             disabled={loadingStates[buttonId]}
-            className="flex items-center gap-3 bg-transparent hover:bg-gray-300 "
+            className={ !btnClass ? "flex items-center gap-3 bg-transparent hover:bg-gray-300 " : btnClass }
           >
             {loadingStates[buttonId] ? (
               <Spinner size="sm"></Spinner>
@@ -60,8 +62,8 @@ const CustomButton: React.FC<LoadingButtonProps> = ({
           size="sm"
           onClick={handleClick}
           disabled={loadingStates[buttonId]}
-          className="flex items-center gap-3 bg-transparent hover:bg-gray-300 "
-        >
+          className={ !btnClass ? "flex items-center gap-3 bg-transparent hover:bg-gray-300 " : btnClass }
+          >
           {loadingStates[buttonId] ? (
             <Spinner size="sm"></Spinner>
           ) : (

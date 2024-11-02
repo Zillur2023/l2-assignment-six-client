@@ -47,7 +47,7 @@ export default function CustomModal({
     <>
    
       {openButton?  
-          <div onClick={onOpen}>{openButton}</div>
+          <div className=" bg-gray-300 px-2 py-1 rounded-md" onClick={onOpen}>{openButton}</div>
          : <Button
         className={buttonClassName}
         variant={buttonVariant}

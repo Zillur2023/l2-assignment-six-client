@@ -19,6 +19,7 @@ import {
   Share2,
   VerifiedIcon,
   Trash2,
+  Pencil,
 } from "lucide-react";
 import { useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
@@ -186,6 +187,7 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
                 <CustomButton
                   onClick={() => handleUpdateFollowUnfollow(post?.author?._id)}
                   buttonId="followOrUnfollow"
+                  btnClass=" "
                 >
                   {userData?.data?.following?.includes(post?.author?._id)
                     ? "Unfollow"
@@ -193,7 +195,7 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
                 </CustomButton>
               )}
               {post?.author?._id === userData?.data?._id && (
-                <PostUpdate updatePostData={post} />
+                <PostUpdate updatePostData={post} btn={<Pencil  />} />
               )}
               {post?.author?._id === userData?.data?._id && (
                 <CustomModal

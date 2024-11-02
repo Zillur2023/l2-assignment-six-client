@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent, ReactNode } from "react";
 import {  FieldValues, FormProvider, SubmitHandler, useForm } from "react-hook-form";
 // import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -21,7 +21,8 @@ import { postUpdateValidationSchema } from "@/schemas";
 interface UpdatePostProps {
 
   updatePostData?: any | null; // Add initialPostData to hold post info for editing
-}
+  btn: ReactNode;
+}4
 
 // type FormValues = {
 //   title: string;
@@ -30,7 +31,7 @@ interface UpdatePostProps {
 //   image?: UploadFile[];
 // };
 
-const PostUpdate: React.FC<UpdatePostProps> = ({updatePostData}) => {
+const PostUpdate: React.FC<UpdatePostProps> = ({updatePostData,btn}) => {
 
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { data: userData } = useGetUserQuery(user?.email, { skip: !user?.email });
@@ -118,6 +119,7 @@ const PostUpdate: React.FC<UpdatePostProps> = ({updatePostData}) => {
     buttonVariant="bordered"
     buttonClassName='rounded-md border hover:border-blue-500 py-0 w-full'
     onUpdate={handleSubmit(onSubmit)}
+    openButton={btn}
   >
      <FormProvider {...methods}>
      <form onSubmit={handleSubmit(onSubmit)}>
