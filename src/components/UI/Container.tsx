@@ -12,7 +12,7 @@ export default function Container({ children }: { children: React.ReactNode }) {
     <div className="container mx-auto max-w-7xl pt-16 px-6 flex-grow relative">
       {/* Sidebar Toggle Button */}
       <button
-        className="lg:hidden fixed top-4 left-4 z-20 p-2 rounded-full bg-blue-600 text-white shadow-md focus:outline-none"
+        className="lg:hidden fixed top-16 left-1 z-20 p-2 rounded-full bg-blue-600 text-white shadow-md focus:outline-none"
         onClick={toggleSidebar}
         aria-label={isSidebarOpen ? "Close menu" : "Open menu"}
       >
@@ -28,11 +28,11 @@ export default function Container({ children }: { children: React.ReactNode }) {
           onClick={toggleSidebar} // Close sidebar when clicking outside
         ></div>
 
-        {/* Sidebar Content */}
+        {/* Sidebar Content - scrollable */}
         <div
-          className={`fixed top-0 left-0 h-full bg-white w-3/4 max-w-xs z-20 transform transition-transform duration-300 lg:relative lg:translate-x-0 lg:w-2/5 ${
+          className={`fixed top-0 left-0 h-full bg-transparent w-3/4 max-w-xs z-20 transform transition-transform duration-300 lg:relative lg:translate-x-0 lg:w-2/5 ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+          } overflow-y-auto`}
         >
           <Sidebar />
         </div>

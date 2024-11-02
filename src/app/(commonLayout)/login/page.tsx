@@ -67,12 +67,9 @@ const LoginPage: React.FC = () => {
 
   const handleForgetPassword = async() => {
     const res = await forgetPassword({email:emailValue})
-    const resetUILink = res?.data?.data
-    console.log("{resetUILink}",res?.data?.data)
     console.log({res})
     if(user){
       router.push(forgetPasswordPath as string)
-      // router.push(resetUILink)
     }
   };
 
@@ -101,7 +98,6 @@ const LoginPage: React.FC = () => {
                   >
                     Remember me
                   </Checkbox> */}
-              <div></div>
               <Link color="primary"
                 onClick={handleForgetPassword}
                 href={`${forgetPasswordPath}`}

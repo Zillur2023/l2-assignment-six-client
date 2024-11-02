@@ -27,6 +27,7 @@ export const resetPasswordValidationSchema = z.object({
 });
 
 export const postUpdateValidationSchema = z.object({
+  isPremium: z.boolean().optional(), 
   title: z.string().min(1, "Please enter your title!"),
   category: z.string().min(1, "Please enter your category!"),
   image: z.string().optional(), // Define image as an optional string

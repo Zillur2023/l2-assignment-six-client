@@ -14,18 +14,27 @@ export interface IUser {
  
   }
 
-  export interface IPost {
-    _id: string;
-    author: IUser; 
-    title: string;
-    category: string;
-    content: string;
-    image?: string; 
-    isPremium: boolean; 
-    upvotes: IUser[];
-    downvotes: IUser[]; 
-    comments:IUser[];
-  }
+export interface IUserData {
+  data: {data: IUser}
+}
+
+export interface IPost {
+  _id: string;
+  author: IUser; 
+  title: string;
+  category: string;
+  content: string;
+  image?: string; 
+  isPremium: boolean; 
+  upvotes: IUser[];
+  downvotes: IUser[]; 
+  comments:IUser[];
+}
+
+export interface IPostData {
+  data: {data: IPost[]}
+}
+
 
   export interface IInput {
     variant?: "flat" | "bordered" | "faded" | "underlined";

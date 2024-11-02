@@ -16,13 +16,17 @@ import CustomSelect from "../form/CustomSelect";
 import {  categoryOptions } from "./constant";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { postUpdateValidationSchema } from "@/schemas";
+import { Checkbox } from "@nextui-org/react";
+import { IPost, IUserData } from "@/type";
 
 
 interface UpdatePostProps {
 
-  updatePostData?: any | null; // Add initialPostData to hold post info for editing
-  btn: ReactNode;
-}4
+  updatePostData?: IPost; // Add initialPostData to hold post info for editing
+  btn?: ReactNode;
+}
+
+
 
 // type FormValues = {
 //   title: string;
@@ -34,18 +38,19 @@ interface UpdatePostProps {
 const PostUpdate: React.FC<UpdatePostProps> = ({updatePostData,btn}) => {
 
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const { data: userData } = useGetUserQuery(user?.email, { skip: !user?.email });
+  const { data: userData } = useGetUserQuery<IUserData>(user?.email, { skip: !user?.email });
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
+  // console.log("userData?.isVerified",userData?.data?.name)
 
   const [createPost] = useCreatePostMutation();
   const [updatePost] = useUpdatePostMutation();
 
   const methods = useForm({
-    resolver: zodResolver(postUpdateValidationSchema), // Pass the Zod resolver here
+    resolver: zodResolver(postUpdateValidationSchema), 
   });
 
-  const { handleSubmit, setValue, reset } = methods;
+  const { handleSubmit, setValue, register, reset } = methods;
 
 
 
@@ -59,7 +64,8 @@ const PostUpdate: React.FC<UpdatePostProps> = ({updatePostData,btn}) => {
   }, [updatePostData, setValue]);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-
+    
+   console.log("PostUpdateformData", data)
     const tempElement = document.createElement("div");
     tempElement.innerHTML = data.content;
     const plainText = tempElement.textContent || tempElement.innerText || "";
@@ -67,10 +73,11 @@ const PostUpdate: React.FC<UpdatePostProps> = ({updatePostData,btn}) => {
 
     const updatedData: any = {
       ...data,
-      _id: updatePostData?._id, // Include the id for update
+      _id: updatePostData?._id,
       author: userData?.data?._id,
       content: plainText,
     };
+    console.log({updatedData})
 
     formData.append("image", imageFiles?.[0])
 
@@ -78,12 +85,12 @@ const PostUpdate: React.FC<UpdatePostProps> = ({updatePostData,btn}) => {
 
     const toastId = toast.loading("loading...");
     try {
-      const result = updatePostData
+      const res = updatePostData
         ? await updatePost(formData).unwrap()
         : await createPost(formData).unwrap();
 
-      if (result.success) {
-        toast.success(result.message, { id: toastId });
+      if (res.success) {
+        toast.success(res.message, { id: toastId });
         reset();
       }
     } catch (error: any) {
@@ -124,7 +131,14 @@ const PostUpdate: React.FC<UpdatePostProps> = ({updatePostData,btn}) => {
      <FormProvider {...methods}>
      <form onSubmit={handleSubmit(onSubmit)}>
       
-     
+     {userData?.data?.isVerified && <Checkbox
+     {...register("isPremium")} 
+                    classNames={{
+                      label: "text-small",
+                    }}
+                  >
+                    Premium Post
+                  </Checkbox> }
       <div className="py-3">
         <CustomInput label="Title" name="title" size="sm" />
       </div>

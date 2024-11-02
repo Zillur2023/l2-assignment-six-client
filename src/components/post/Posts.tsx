@@ -39,7 +39,7 @@ import Author from "../shared/Author";
 import PostUpdate from "./PostUpdate";
 import CustomModal from "../modal/CustomModal";
 import CustomButton from "../shared/CustomButton";
-import { IPost } from "@/type";
+import { IPost, IPostData, IUserData } from "@/type";
 
 interface PostsProps {
   postId?: string;
@@ -49,7 +49,7 @@ interface PostsProps {
 const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
   const router = useRouter();
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const { data: userData } = useGetUserQuery(user?.email, {
+  const { data: userData } = useGetUserQuery<IUserData>(user?.email, {
     skip: !user?.email,
   });
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -64,9 +64,9 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
         category: category || undefined,
         sortBy,
       };
-  const { data: postsData } = useGetAllPostQuery(queryPost);
-  console.log({ userData });
-  console.log({ postsData });
+  const { data: postData } = useGetAllPostQuery<IPostData>(queryPost);
+  // console.log({ userData });
+  console.log({ postData });
   const [updateUpvote] = useUpdateUpvoteMutation();
   const [updateDownvote] = useUpdateDownvoteMutation();
   const [updateFollowUnfollow] = useUpdateFollowUnfollowMutation();
@@ -77,9 +77,9 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
       router.push("/login");
       return;
     }
-    const postData = { userId: userData?.data?._id, postId };
+    const upvotePostData = { userId: userData?.data?._id, postId };
     try {
-      await updateUpvote(postData).unwrap();
+      await updateUpvote(upvotePostData).unwrap();
     } catch (error: any) {
       if (error) {
         toast.error(error?.data?.message);
@@ -93,9 +93,9 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
       router.push("/login");
       return;
     }
-    const postData = { userId: userData?.data?._id, postId };
+    const downvotePostData = { userId: userData?.data?._id, postId };
     try {
-      await updateDownvote(postData).unwrap();
+      await updateDownvote(downvotePostData).unwrap();
     } catch (error: any) {
       if (error) {
         toast.error(error?.data?.message);
@@ -175,7 +175,7 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
         </div>
       )}
 
-      {postsData?.data?.map((post: IPost) => (
+      {postData?.data?.map((post) => (
         <Card key={post._id} isFooterBlurred className=" w-full">
           {/* Author Info */}
           <CardHeader className=" justify-between ">
@@ -193,7 +193,7 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
                 </CustomButton>
               )}
               {post?.author?._id === userData?.data?._id && (
-                <PostUpdate updatePostData={post} btn={<Pencil  />} />
+                <PostUpdate updatePostData={post} btn={<Pencil />} />
               )}
               {post?.author?._id === userData?.data?._id && (
                 <CustomModal
@@ -204,21 +204,17 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
                   actionButtonText="Delete"
                   onUpdate={() => handleDeleteClick(post?._id)}
                 >
-                  <Author
-                    author={post?.author}
-                    nameClass="text-lg font-semibold"
-                  />
-                  <p className=" text-center ">
-                    <strong>Category:</strong> {post?.category}
-                  </p>
-                  <p className=" text-center ">
-                    <strong>Title:</strong> {post?.title} .
+                  <p className=" text-red-500 font-semibold text-medium">
+                    {" "}
+                    Are your sure to delete{" "}
                   </p>
                 </CustomModal>
               )}
             </div>
+            
           </CardHeader>
           <CardBody>
+          { post?.isPremium && <div className=" flex justify-end  "> <span className=" border-1 text-green-500 py-0 px-2 rounded-md">Premium</span> </div> }
             <p className=" py-2">#{post?.category} </p>
             {/* Post Title */}
             <p className=" mb-2">{post?.title}</p>
@@ -244,72 +240,73 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
 
           <CardFooter className="justify-between ">
             {/* Post Interactions */}
-              {/* <Tooltip content={post?.upvotes?.[index+1]?.name}> */}
-            
-                <CustomButton
-                  onClick={() => handleUpvote(post._id)}
-                  buttonId="upvote"
-                  data={post?.upvotes}
-                >
-                  <ThumbsUp
-                    size={18}
-                    className={`${
-                      post?.upvotes?.some(
-                        (item) => item?._id === userData?.data?._id
-                      )
-                        ? "text-blue-600 fill-current"
-                        : "text-gray-600"
-                    }`}
-                  />
+            {/* <Tooltip content={post?.upvotes?.[index+1]?.name}> */}
 
-                  <span>{post.upvotes.length}</span>
-                </CustomButton>
-            
-                <CustomButton
-                  onClick={() => handleDownvote(post._id)}
-                  buttonId="downvote"
-                  data={post?.downvotes}
-                >
-                  <ThumbsDown
-                    size={18}
-                    className={`${
-                      post?.downvotes?.some(
-                        (item) => item?._id === userData?.data?._id
-                      )
-                        ? "text-blue-600 fill-current"
-                        : "text-gray-600"
-                    }`}
-                  />
-                  <span>{post.downvotes.length}</span>
-                </CustomButton>
+            <CustomButton
+              onClick={() => handleUpvote(post._id)}
+              buttonId="upvote"
+              data={post?.upvotes}
+            >
+              <ThumbsUp
+                size={18}
+                className={`${
+                  post?.upvotes?.some(
+                    (item) => item?._id === userData?.data?._id
+                  )
+                    ? "text-blue-600 fill-current"
+                    : "text-gray-600"
+                }`}
+              />
+
+              <span>{post.upvotes.length}</span>
+            </CustomButton>
+
+            <CustomButton
+              onClick={() => handleDownvote(post._id)}
+              buttonId="downvote"
+              data={post?.downvotes}
+            >
+              <ThumbsDown
+                size={18}
+                className={`${
+                  post?.downvotes?.some(
+                    (item) => item?._id === userData?.data?._id
+                  )
+                    ? "text-blue-600 fill-current"
+                    : "text-gray-600"
+                }`}
+              />
+              <span>{post.downvotes.length}</span>
+            </CustomButton>
 
             {/* <div className=""> */}
-              {commentModal ? (
-                <CommentModal
-                  postId={post?._id}
-                  openButton={
-                    <button className="flex items-center bg-transparent hover:bg-gray-300 py-1 px-2 rounded-md">
-                      <MessageCircle size={18} />
-                      <span>{post.comments?.length}</span>
-                    </button>
-                  }
-                />
-              ) : (
-                <Button
-                size="sm"
-                className="flex items-center  bg-transparent hover:bg-gray-300 ">
-                      <MessageCircle size={18} />
-                <span>{post.comments?.length}</span>
-              </Button>
-              )}
-            {/* </div> */}
+            {commentModal ? (
+              <CommentModal
+                postId={post?._id}
+                openButton={
+                  <button className="flex items-center gap-3">
+                    <MessageCircle size={18} />
+                    <span>{post?.comments?.length}</span>
+                  </button>
+                }
+              />
+            ) : (
               <Button
                 size="sm"
                 className="flex items-center  bg-transparent hover:bg-gray-300 "
               >
-                <Share2 size={18} />
-                {/* <span>{post.comments?.length}</span> */}
+                <MessageCircle size={18} />
+                <span>{post?.comments?.length}</span>
               </Button>
+            )}
+            {/* </div> */}
+            <Button
+              size="sm"
+              className="flex items-center  bg-transparent hover:bg-gray-300 "
+            >
+              <Share2 size={18} />
+              {/* <span>{post.comments?.length}</span> */}
+            </Button>
           </CardFooter>
         </Card>
       ))}

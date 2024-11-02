@@ -15,11 +15,12 @@ import { Button } from "@nextui-org/react";
 import { toast } from "sonner";
 import { useIsAvailableForVeriedQuery } from "@/redux/features/post/postApi";
 import PostUpdate from "@/components/post/PostUpdate";
+import { IUserData } from "@/type";
 
 const Sidebar = () => {
   // const { user } = useUser();
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const { data: userData } = useGetUserQuery(user?.email, {
+  const { data: userData } = useGetUserQuery<IUserData>(user?.email, {
     skip: !user?.email,
   });
   const { data: IsAvailableForVerified } =
