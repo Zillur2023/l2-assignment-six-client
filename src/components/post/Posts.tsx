@@ -10,14 +10,12 @@ import {
   CardFooter,
   CardHeader,
   Image,
-  Tooltip,
 } from "@nextui-org/react";
 import {
   ThumbsUp,
   ThumbsDown,
   MessageCircle,
   Share2,
-  VerifiedIcon,
   Trash2,
   Pencil,
 } from "lucide-react";
@@ -246,7 +244,6 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
 
           <CardFooter className="justify-between ">
             {/* Post Interactions */}
-            <div className="">
               {/* <Tooltip content={post?.upvotes?.[index+1]?.name}> */}
             
                 <CustomButton
@@ -267,8 +264,6 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
 
                   <span>{post.upvotes.length}</span>
                 </CustomButton>
-            </div>
-            <div>
             
                 <CustomButton
                   onClick={() => handleDownvote(post._id)}
@@ -287,35 +282,34 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
                   />
                   <span>{post.downvotes.length}</span>
                 </CustomButton>
-            </div>
 
-            <div className="">
+            {/* <div className=""> */}
               {commentModal ? (
                 <CommentModal
                   postId={post?._id}
                   openButton={
-                    <button className="flex items-center space-x-2 hover:bg-gray-300 py-1 px-2 rounded-md">
+                    <button className="flex items-center bg-transparent hover:bg-gray-300 py-1 px-2 rounded-md">
                       <MessageCircle size={18} />
                       <span>{post.comments?.length}</span>
                     </button>
                   }
                 />
               ) : (
-                <button className="flex items-center space-x-2 hover:bg-gray-300 py-1 px-2 rounded-md">
-                  <MessageCircle size={18} />
-                  <span>{post.comments?.length}</span>
-                </button>
+                <Button
+                size="sm"
+                className="flex items-center  bg-transparent hover:bg-gray-300 ">
+                      <MessageCircle size={18} />
+                <span>{post.comments?.length}</span>
+              </Button>
               )}
-            </div>
-            <div>
+            {/* </div> */}
               <Button
                 size="sm"
-                className="flex items-center space-x-2 bg-transparent hover:bg-gray-300 "
+                className="flex items-center  bg-transparent hover:bg-gray-300 "
               >
                 <Share2 size={18} />
-                {/* <span>{post.shares}</span> */}
+                {/* <span>{post.comments?.length}</span> */}
               </Button>
-            </div>
           </CardFooter>
         </Card>
       ))}

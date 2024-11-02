@@ -14,6 +14,7 @@ export default function Container({ children }: { children: React.ReactNode }) {
       <button
         className="lg:hidden fixed top-4 left-4 z-20 p-2 rounded-full bg-blue-600 text-white shadow-md focus:outline-none"
         onClick={toggleSidebar}
+        aria-label={isSidebarOpen ? "Close menu" : "Open menu"}
       >
         {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
