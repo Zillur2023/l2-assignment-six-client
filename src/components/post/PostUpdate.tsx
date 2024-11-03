@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useState, useEffect, ChangeEvent, ReactNode } from "react";
-import {  FieldValues, FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import {  Controller, FieldValues, FormProvider, SubmitHandler, useForm } from "react-hook-form";
 // import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useAppSelector } from "@/redux/hooks";
@@ -18,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { postUpdateValidationSchema } from "@/schemas";
 import { Checkbox } from "@nextui-org/react";
 import { IPost, IUserData } from "@/type";
+import ReactQuill from "react-quill";
 
 
 interface UpdatePostProps {
@@ -47,7 +48,7 @@ const PostUpdate: React.FC<UpdatePostProps> = ({updatePostData,btn}) => {
   const [updatePost] = useUpdatePostMutation();
 
   const methods = useForm({
-    resolver: zodResolver(postUpdateValidationSchema), 
+    // resolver: zodResolver(postUpdateValidationSchema), 
   });
 
   const { handleSubmit, setValue, register, reset } = methods;
@@ -144,6 +145,15 @@ const PostUpdate: React.FC<UpdatePostProps> = ({updatePostData,btn}) => {
       </div>
       <div className="py-3">
       <CustomSelect label="Category" name="category" options={categoryOptions} />
+      </div>
+      <div className=" py-3">
+      <Controller
+              name="content"
+              control={methods.control}
+              render={({ field }) => (
+                <ReactQuill {...field} placeholder="Write your post here..." />
+              )}
+            />
       </div>
 
       <div className="py-3">

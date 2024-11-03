@@ -54,12 +54,12 @@ const columns = [
 
 
 const PostManagement: React.FC = () => {
-  const { data: allPosts, refetch } = useGetAllPostQuery({});
-  const [users, setUsers] = useState<IPost[]>(allPosts?.data || []);
+  const { data: allPosts, refetch } = useGetAllPostQuery({isPremium:true});
+  const [posts, setPosts] = useState<IPost[]>(allPosts?.data || []);
 
   useEffect(() => {
     if (allPosts?.data) {
-      setUsers(allPosts.data);
+      setPosts(allPosts.data);
     }
   }, [allPosts?.data, refetch]);
 
@@ -74,7 +74,7 @@ const PostManagement: React.FC = () => {
   });
   const [page, setPage] = React.useState(1);
 
-  const pages = Math.ceil(users.length / rowsPerPage);
+  const pages = Math.ceil(posts.length / rowsPerPage);
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -85,7 +85,7 @@ const PostManagement: React.FC = () => {
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...users];
+    let filteredUsers = [...posts];
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
@@ -99,7 +99,7 @@ const PostManagement: React.FC = () => {
     }
 
     return filteredUsers;
-  }, [users, filterValue, categoryFilter]);
+  }, [posts, filterValue, categoryFilter]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -132,17 +132,17 @@ const PostManagement: React.FC = () => {
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((user: IPost, columnKey: React.Key) => {
-    const cellValue = user[columnKey as keyof IPost];
+  const renderCell = React.useCallback((post: IPost, columnKey: React.Key) => {
+    const cellValue = post[columnKey as keyof IPost];
 
   
     switch (columnKey) {
       case "name":
         // Render the 'author' object with name and email
-        return  <Author author={user?.author} />
+        return  <Author author={post?.author} />
       case "email":
         // Safely render the title
-        return <p className="text-bold">{user?.author?.email}</p>;
+        return <p className="text-bold">{post?.author?.email}</p>;
       case "title":
         // Safely render the title
         return <p className="text-bold">{cellValue as string}</p>;
@@ -153,14 +153,14 @@ const PostManagement: React.FC = () => {
   
       case "isPremium":
         // Safely render the premium status as 'Premium' or 'Standard'
-        return <p>{(cellValue as boolean) && <span className=' border rounded-md px-2 py-1 text-blue-400'>{'Premium'}</span>}</p>;
+        return <p>{(cellValue as boolean) && <span className=' border rounded-md px-2 py-0 text-blue-400'>{'Premium'}</span>}</p>;
   
       case "upvotes":
-        return <p> {user?.upvotes?.length} </p>
+        return <p> {post?.upvotes?.length} </p>
       case "downvotes":
-        return <p> {user?.downvotes?.length} </p>
+        return <p> {post?.downvotes?.length} </p>
       case "comments":
-        return <p> {user?.comments?.length} </p>
+        return <p> {post?.comments?.length} </p>
         // Render counts, defaulting to 0 if undefined
         // return <p>{cellValue !== undefined ? cellValue as number : 0}</p>;
   
@@ -291,7 +291,7 @@ const PostManagement: React.FC = () => {
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">Total {users.length} users</span>
+          <span className="text-default-400 text-small">Total {posts.length} posts</span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
             <select
@@ -312,7 +312,7 @@ const PostManagement: React.FC = () => {
     visibleColumns,
     onSearchChange,
     onRowsPerPageChange,
-    users.length,
+    posts.length,
     hasSearchFilter,
   ]);
 

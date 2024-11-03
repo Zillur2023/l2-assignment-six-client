@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import React, { useEffect, useState } from 'react';
@@ -21,7 +22,7 @@ import {
   SortDescriptor
 } from "@nextui-org/react";
 
-import { useGetAllUserQuery } from '@/redux/features/user/userApi';
+import { useDeleteUserMutation, useGetAllUserQuery } from '@/redux/features/user/userApi';
 import { VerticalDotsIcon } from '@/components/table/VerticalDotsIcon';
 import { ChevronDownIcon } from '@/components/table/ChevronDownIcon';
 import { PlusIcon } from '@/components/table/PlusIcon';
@@ -29,6 +30,7 @@ import { capitalize } from '@/components/table/utils';
 import {SearchIcon} from '@/components/table/SearchIcon'
 import Author from '@/components/shared/Author';
 import { IUser } from '@/type';
+import { toast } from 'sonner';
 
 
 const columns = [
@@ -74,7 +76,7 @@ const UserManagementPage = () => {
       setUsers(allUser.data);
     }
   }, [allUser?.data, refetch]);
-
+  const [deleteUser] = useDeleteUserMutation()
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS));
@@ -161,9 +163,13 @@ const UserManagementPage = () => {
             {cellValue}
           </Chip>
         );
+         case "followers":
+        return <p> {user?.followers?.length} </p>
+      case "following":
+        return <p> {user?.following?.length} </p>
       case "isVerified":
         return (
-          <p> {(cellValue as boolean) && <span className=' border rounded-md px-2 py-1 text-blue-400'>{'Verified'}</span>} </p>
+          <p> {(cellValue as boolean) && <span className=' border rounded-md px-2 py-0 text-blue-400'>{'Verified'}</span>} </p>
         );
       case "actions":
         return (
@@ -177,7 +183,7 @@ const UserManagementPage = () => {
               <DropdownMenu>
                 <DropdownItem>View</DropdownItem>
                 <DropdownItem>Edit</DropdownItem>
-                <DropdownItem>Delete</DropdownItem>
+                <DropdownItem onClick={() => handleDeleteUser(user?._id)}>Delete</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -348,6 +354,20 @@ const UserManagementPage = () => {
     }),
     [],
   );
+
+  const handleDeleteUser = async(id:string) => {
+    const toastId = toast.loading("loading...")
+    
+  try {
+    const res = await deleteUser(id).unwrap()
+    console.log({res})
+    if(res) {
+      toast.success(res?.message, {id: toastId})
+    }
+  } catch (error:any) {
+    toast.error(error?.data?.message, {id: toastId})
+  }
+  }
 
   return (
     <Table

@@ -40,6 +40,7 @@ import PostUpdate from "./PostUpdate";
 import CustomModal from "../modal/CustomModal";
 import CustomButton from "../shared/CustomButton";
 import { IPost, IPostData, IUserData } from "@/type";
+import NoDataFound from "../shared/NoDataFound";
 
 interface PostsProps {
   postId?: string;
@@ -133,7 +134,9 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
   };
 
   return (
-    <div className="mt-6 space-y-6 max-w-full sm:max-w-[600px] md:max-w-[700px] lg:max-w-[800px] mx-auto">
+    <>
+    {
+      postData?.data?.length ? <div className="mt-6 space-y-6 max-w-full sm:max-w-[600px] md:max-w-[700px] lg:max-w-[800px] mx-auto">
       {!postId && (
         <div className="flex flex-col sm:flex-row  items-center justify-between ">
           <input
@@ -178,7 +181,7 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
       )}
 
       {postData?.data?.map((post) => (
-        <Card key={post._id} isFooterBlurred className=" w-full">
+        <Card key={post._id} isFooterBlurred className=" w-full p-0 md:p-5 ">
           {/* Author Info */}
           <CardHeader className=" justify-between ">
             <Author author={post?.author} nameClass="text-lg font-semibold" />
@@ -243,7 +246,7 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
             )}
 
             {/* Post Content */}
-            <p className="mb-6 text-gray-700">{post.content}</p>
+            <p className="my-5">{post.content}</p>
           </CardBody>
 
           <CardFooter className="justify-between ">
@@ -318,7 +321,9 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
           </CardFooter>
         </Card>
       ))}
-    </div>
+    </div> : <NoDataFound/>
+    }
+    </>
   );
 };
 
