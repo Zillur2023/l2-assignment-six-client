@@ -15,4 +15,4 @@ export const categoryOptions = [
   { name: "Solo Travel", uid: "Solo Travel" },
   { name: "Family-Friendly Destinations", uid: "Family-Friendly Destinations" },
 
-];
+]

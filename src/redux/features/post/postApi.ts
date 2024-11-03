@@ -16,13 +16,15 @@ export const postApi = baseApi.injectEndpoints({
         userId,
         searchTerm, 
         category,   
-        sortBy,     
+        sortBy, 
+        isPremium    
       }: {
         postId?: string;
         userId?: string;
         searchTerm?: string; // Optional searchTerm
         category?: string;   // Optional category
         sortBy?: "highestUpvotes" | "lowestUpvotes" | "highestDownvotes" | "lowestDownvotes" // Optional sortBy
+        isPremium?: boolean 
       }) => {
         let url = '/post/all-post'; // Base URL
     
@@ -45,6 +47,9 @@ export const postApi = baseApi.injectEndpoints({
         }
         if (sortBy) {
           params.push(`sortBy=${sortBy}`);
+        }
+        if (isPremium !== undefined) {
+          params.push(`isPremium=${isPremium}`);
         }
         
         // If there are any query parameters, append them to the URL

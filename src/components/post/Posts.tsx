@@ -57,12 +57,14 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
   const [sortBy, setSortBy] = useState<
     "highestUpvotes" | "lowestUpvotes" | "highestDownvotes" | "lowestDownvotes"
   >("highestUpvotes");
+  
   const queryPost = postId
     ? { postId }
     : {
         searchTerm,
         category: category || undefined,
         sortBy,
+        isPremium: userData?.data?.isVerified ? true : undefined
       };
   const { data: postData } = useGetAllPostQuery<IPostData>(queryPost);
   // console.log({ userData });
@@ -133,7 +135,7 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
   return (
     <div className="mt-6 space-y-6 max-w-full sm:max-w-[600px] md:max-w-[700px] lg:max-w-[800px] mx-auto">
       {!postId && (
-        <div>
+        <div className="flex flex-col sm:flex-row  items-center justify-between ">
           <input
             type="text"
             placeholder="Search..."
@@ -211,10 +213,16 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
                 </CustomModal>
               )}
             </div>
-            
           </CardHeader>
           <CardBody>
-          { post?.isPremium && <div className=" flex justify-end  "> <span className=" border-1 text-green-500 py-0 px-2 rounded-md">Premium</span> </div> }
+            {post?.isPremium && (
+              <div className=" flex justify-end  ">
+                {" "}
+                <span className=" border-1  font-normal text-green-500 py-0 px-2 rounded-md">
+                  Premium
+                </span>{" "}
+              </div>
+            )}
             <p className=" py-2">#{post?.category} </p>
             {/* Post Title */}
             <p className=" mb-2">{post?.title}</p>
