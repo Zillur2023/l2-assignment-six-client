@@ -14,13 +14,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body className={` antialiased`}>
-        <Providers  themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+        <Providers >
           <div className="mx-auto container">{children}</div>
         </Providers>
       </body>

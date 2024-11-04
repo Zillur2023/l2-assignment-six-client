@@ -10,14 +10,14 @@ import {
 } from "react-hook-form";
 import { Avatar } from "@nextui-org/react";
 import { Trash2 } from "lucide-react"; // Import the X icon for the close button
-import { useAppSelector } from "@/redux/hooks";
+// import { useAppSelector } from "@/redux/hooks";
 import { useGetUserQuery } from "@/redux/features/user/userApi";
 import {
   useCreateCommentMutation,
   useDeleteCommentMutation,
   useGetAllCommentQuery,
 } from "@/redux/features/comment/commentApi";
-import { RootState } from "@/redux/store";
+// import { RootState } from "@/redux/store";
 import { toast } from "sonner";
 import CustomModal from "../modal/CustomModal";
 import CustomInput from "../form/CustomInput";

@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { logout } from "@/services/AuthSerivce";
-import { logoutFromRedux, setUser } from "../features/auth/authSlice";
+import {  setUser } from "../features/auth/authSlice";
 import { RootState } from "../store";
 import {
   BaseQueryApi,
@@ -67,7 +68,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 
       result = await baseQuery(args, api, extraOptions);
     } else {
-      // api.dispatch(logoutFromRedux());
       logout();
     }
   }
