@@ -12,7 +12,7 @@ const GoogleLogin = () => {
     <Button
       onClick={() => {
         // signIn("google", { callbackUrl: redirect ? redirect : "/" });
-        signIn("google", { callbackUrl: "http://localhost:3000/" });
+        signIn("google", { callbackUrl: "http://localhost:3000" });
       }}
     >
       Log In With Google

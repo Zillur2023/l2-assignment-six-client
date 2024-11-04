@@ -41,6 +41,7 @@ import CustomModal from "../modal/CustomModal";
 import CustomButton from "../shared/CustomButton";
 import { IPost, IPostData, IUserData } from "@/type";
 import NoDataFound from "../shared/NoDataFound";
+import { useUser } from "@/context/user.provider";
 
 interface PostsProps {
   postId?: string;
@@ -49,7 +50,8 @@ interface PostsProps {
 
 const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
   const router = useRouter();
-  const { user } = useAppSelector((state: RootState) => state.auth);
+  // const { user } = useAppSelector((state: RootState) => state.auth);
+  const { user } = useUser();
   const { data: userData } = useGetUserQuery<IUserData>(user?.email, {
     skip: !user?.email,
   });

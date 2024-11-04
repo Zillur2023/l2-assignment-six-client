@@ -19,6 +19,7 @@ import { postUpdateValidationSchema } from "@/schemas";
 import { Checkbox } from "@nextui-org/react";
 import { IPost, IUserData } from "@/type";
 import ReactQuill from "react-quill";
+import { useUser } from "@/context/user.provider";
 
 
 interface UpdatePostProps {
@@ -38,7 +39,8 @@ interface UpdatePostProps {
 
 const PostUpdate: React.FC<UpdatePostProps> = ({updatePostData,btn}) => {
 
-  const { user } = useAppSelector((state: RootState) => state.auth);
+  // const { user } = useAppSelector((state: RootState) => state.auth);
+  const { user } = useUser();
   const { data: userData } = useGetUserQuery<IUserData>(user?.email, { skip: !user?.email });
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);

@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import CustomModal from "../modal/CustomModal";
 import CustomInput from "../form/CustomInput";
 import Posts from "../post/Posts";
+import { useUser } from "@/context/user.provider";
 // import LoadingButton from '../shared/LoadingButton';
 
 interface CommentModalProps {
@@ -30,7 +31,8 @@ interface CommentModalProps {
 }
 
 const CommentModal: React.FC<CommentModalProps> = ({ postId, openButton }) => {
-  const { user } = useAppSelector((state: RootState) => state.auth);
+  // const { user } = useAppSelector((state: RootState) => state.auth);
+  const { user } = useUser();
   const { data: userData } = useGetUserQuery(user?.email, {
     skip: !user?.email,
   });

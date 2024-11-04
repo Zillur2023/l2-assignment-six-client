@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={` antialiased`}>
-        <Providers>
+        <Providers  themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="mx-auto container">{children}</div>
         </Providers>
       </body>

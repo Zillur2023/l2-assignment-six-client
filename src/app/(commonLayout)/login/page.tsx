@@ -7,26 +7,29 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { jwtDecode } from "jwt-decode";
+// import { jwtDecode } from "jwt-decode";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { useAppDispatch } from "@/redux/hooks";
+// import { useAppDispatch } from "@/redux/hooks";
 import { useForgetPasswordMutation, useLoginMutation } from "@/redux/features/auth/authApi";
-import { setUser } from "@/redux/features/auth/authSlice";
+// import { setUser } from "@/redux/features/auth/authSlice";
 import Link from "next/link";
-import CustomForm from "@/components/form/CustomForm";
 import CustomInput from "@/components/form/CustomInput";
 import { Button } from "@nextui-org/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginValidationSchema } from "@/schemas";
-import GoogleLogin from "@/components/shared/GoogleLogin";
+// import GoogleLogin from "@/components/shared/GoogleLogin";
 import { useGetUserQuery } from "@/redux/features/user/userApi";
 
-const LoginPage: React.FC = () => {
+import { useUser } from "@/context/user.provider";
+
+const LoginPage = () => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const [login] = useLoginMutation();
   const [forgetPassword] = useForgetPasswordMutation()
+  const { setIsLoading: userLoading } = useUser();
+ 
 
   const methods = useForm({
     resolver: zodResolver(loginValidationSchema), // Pass the Zod resolver here
@@ -40,28 +43,30 @@ const LoginPage: React.FC = () => {
   const { data: user } = useGetUserQuery(emailValue, {
     skip: !emailValue,
   });
-  // console.log("loginUSerrrr.user", user)
-  // console.log("loginUSerrrr.roleeee", user?.data?.email)
-  // console.log("loginUSerrrremailValue", emailValue)
   
   const forgetPasswordPath = `/reset-password?email=${user?.data?.email}`
  
   // console.log({forgetPasswordPath})
 
   const onSubmit: SubmitHandler<FieldValues> = async (formData) => {
+  
     const toastId = toast.loading("Logging in...");
 
     try {
       const res = await login(formData).unwrap();
       if (res) {
-        const { token } = res.data;
-        const user: any = jwtDecode(token);
-        dispatch(setUser({ user, token }));
+        userLoading(true);
+        // userLoading(false); 
+        // const { token } = res.data;
+        // const user: any = jwtDecode(token);
+        // dispatch(setUser({ user, token }));
         router.push("/");
         toast.success(res?.message, { id: toastId });
       }
     } catch (error: any) {
       toast.error(error?.data?.message, { id: toastId });
+    } finally {
+      // userLoading(false); 
     }
   };
 
@@ -126,9 +131,9 @@ const LoginPage: React.FC = () => {
           </Link>
         </div>
       </div>
-      <div>
+      {/* <div>
         <GoogleLogin />
-      </div>
+      </div> */}
     </div>
   );
 };

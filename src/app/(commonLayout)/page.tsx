@@ -1,7 +1,9 @@
 import CommonLayoutPage from "@/components/commonLayoutPage/CommonLayoutPage"
 
 
-const page = () => {
+
+const page = async() => {
+ 
 
   return (
     <>

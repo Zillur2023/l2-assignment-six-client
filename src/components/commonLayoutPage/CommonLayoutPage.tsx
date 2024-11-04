@@ -5,11 +5,14 @@ import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Posts from "../post/Posts";
+import { useUser } from "@/context/user.provider";
 
 const CommonLayoutPage = () => {
     const router = useRouter();
-    const { user } = useAppSelector((state: RootState) => state.auth);
-  
+    // const { user } = useAppSelector((state: RootState) => state.auth);
+    const { user } = useUser();
+
+    console.log('CommonLayoutpage', user)
   
     useEffect(() => {
       // If not loading and userData is available

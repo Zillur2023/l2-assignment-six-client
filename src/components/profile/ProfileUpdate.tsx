@@ -8,11 +8,13 @@ import { useGetUserQuery, useUpdateProfileMutation } from "@/redux/features/user
 import { RootState } from "@/redux/store";
 import CustomInput from "../form/CustomInput";
 import CustomModal from "../modal/CustomModal";
+import { useUser } from "@/context/user.provider";
 
 
 
 const UpdateProfileModal = () => {
-  const { user } = useAppSelector((state: RootState) => state.auth);
+  // const { user } = useAppSelector((state: RootState) => state.auth);
+  const { user } = useUser();
   const { data: userData } = useGetUserQuery(user?.email, { skip: !user?.email });
   const [updateProfile] = useUpdateProfileMutation();
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
