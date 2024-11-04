@@ -19,8 +19,8 @@ import {
   Trash2,
   Pencil,
 } from "lucide-react";
-import { useAppSelector } from "@/redux/hooks";
-import { RootState } from "@/redux/store";
+// import { useAppSelector } from "@/redux/hooks";
+// import { RootState } from "@/redux/store";
 import {
   useGetUserQuery,
   useUpdateFollowUnfollowMutation,

@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { SidebarOptions } from "./SidebarOptions";
 import { adminLinks, userLinks } from "./constant";
-import { useAppSelector } from "@/redux/hooks";
-import { RootState } from "@/redux/store";
+// import { useAppSelector } from "@/redux/hooks";
+// import { RootState } from "@/redux/store";
 import {
   useGetUserQuery,
   useUpdateVerifiedMutation,

@@ -4,25 +4,23 @@ import { Button } from '@nextui-org/react';
 import { FieldValues, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import CustomInput from '@/components/form/CustomInput';
 import { useResetPasswordMutation } from '@/redux/features/auth/authApi';
 import { resetPasswordValidationSchema } from '@/schemas';
+import { useUser } from '@/context/user.provider';
 
 
-const ResetPasswordPage: React.FC = () => {
+const ChangePassword: React.FC = () => {
+  const {user} = useUser()
   const router = useRouter()
-  const searchParams = useSearchParams();
-  const emailQuery = searchParams.get('email') || ''; // Get the 'email' query param or set it to an empty string
-  const tokenQuery = searchParams.get('token') || ''; // Get the 'email' query param or set it to an empty string
-  console.log({emailQuery})
   const [resetPassword] = useResetPasswordMutation();
 
 
   
 
   const methods = useForm({
-    resolver: zodResolver(resetPasswordValidationSchema),
+    // resolver: zodResolver(resetPasswordValidationSchema),
     // defaultValues: {
     //   email: emailQuery, // Set email as default value
     // },
@@ -31,16 +29,16 @@ const ResetPasswordPage: React.FC = () => {
   const { handleSubmit, setValue  } = methods;
 
   useEffect(() => {
-    if (emailQuery) {
-      setValue("email", emailQuery);
+    if (user) {
+      setValue("email", user?.email);
     }
-  }, [emailQuery,setValue])
+  }, [user,setValue])
 
   const onSubmit: SubmitHandler<FieldValues> = async (formData) => {
     const data = {
-      email: emailQuery,
-      newPassword: formData?.password,
-      token: tokenQuery,
+      email: user?.email,
+      oldPassword: formData?.oldPassword,
+      newPassword: formData?.newPassword,
     };
     console.log('requestPassworddata', data)
 
@@ -60,7 +58,7 @@ const ResetPasswordPage: React.FC = () => {
 
   return (
     <div className="flex h-[calc(100vh-100px)] flex-col items-center justify-center">
-      <h3 className="my-2 text-xl font-bold">Reset Password</h3>
+      <h3 className="my-2 text-xl font-bold">Change password</h3>
       <div className="w-[35%]">
       <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -69,8 +67,16 @@ const ResetPasswordPage: React.FC = () => {
           </div>
           <div className="py-3">
             <CustomInput
-              label="Password"
-              name="password"
+              label="Old password"
+              name="oldPassword"
+              size="sm"
+              type="password"
+            />
+          </div>
+          <div className="py-3">
+            <CustomInput
+              label="New password"
+              name="newPassword"
               size="sm"
               type="password"
             />
@@ -80,7 +86,7 @@ const ResetPasswordPage: React.FC = () => {
             size="lg"
             type="submit"
           >
-            Reset password
+            Change password
           </Button>
           </form>
                 </FormProvider>
@@ -89,4 +95,4 @@ const ResetPasswordPage: React.FC = () => {
   );
 };
 
-export default ResetPasswordPage;
+export default ChangePassword;

@@ -3,9 +3,9 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { FieldValues, FormProvider, SubmitHandler, useForm  } from "react-hook-form";
 import { toast } from "sonner";
-import { useAppSelector } from "@/redux/hooks";
+// import { useAppSelector } from "@/redux/hooks";
+// import { RootState } from "@/redux/store";
 import { useGetUserQuery, useUpdateProfileMutation } from "@/redux/features/user/userApi";
-import { RootState } from "@/redux/store";
 import CustomInput from "../form/CustomInput";
 import CustomModal from "../modal/CustomModal";
 import { useUser } from "@/context/user.provider";

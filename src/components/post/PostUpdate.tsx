@@ -5,8 +5,8 @@ import React, { useState, useEffect, ChangeEvent, ReactNode } from "react";
 import {  Controller, FieldValues, FormProvider, SubmitHandler, useForm } from "react-hook-form";
 // import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useAppSelector } from "@/redux/hooks";
-import { RootState } from "@/redux/store";
+// import { useAppSelector } from "@/redux/hooks";
+// import { RootState } from "@/redux/store";
 import { useGetUserQuery } from "@/redux/features/user/userApi";
 import { useCreatePostMutation, useUpdatePostMutation } from "@/redux/features/post/postApi";
 import { toast } from "sonner";
@@ -50,7 +50,7 @@ const PostUpdate: React.FC<UpdatePostProps> = ({updatePostData,btn}) => {
   const [updatePost] = useUpdatePostMutation();
 
   const methods = useForm({
-    // resolver: zodResolver(postUpdateValidationSchema), 
+    resolver: zodResolver(postUpdateValidationSchema), 
   });
 
   const { handleSubmit, setValue, register, reset } = methods;

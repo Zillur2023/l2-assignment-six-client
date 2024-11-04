@@ -1,7 +1,7 @@
 'use client'
 
-import { useAppSelector } from "@/redux/hooks";
-import { RootState } from "@/redux/store";
+// import { useAppSelector } from "@/redux/hooks";
+// import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Posts from "../post/Posts";
