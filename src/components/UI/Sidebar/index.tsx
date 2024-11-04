@@ -15,8 +15,11 @@ import { Button } from "@nextui-org/react";
 import { toast } from "sonner";
 import { useIsAvailableForVeriedQuery } from "@/redux/features/post/postApi";
 import PostUpdate from "@/components/post/PostUpdate";
+// const PostUpdate = dynamic(import('@/components/post/PostUpdate'), { ssr: false }
+// );
 import { IUserData } from "@/type";
 import { useUser } from "@/context/user.provider";
+// import dynamic from "next/dynamic";
 
 const Sidebar = () => {
   // const { user } = useUser();
