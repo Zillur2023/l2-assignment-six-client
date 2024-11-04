@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import CustomInput from '@/components/form/CustomInput';
 import { useResetPasswordMutation } from '@/redux/features/auth/authApi';
-import { resetPasswordValidationSchema } from '@/schemas';
+import { changePasswordValidationSchema } from '@/schemas';
 import { useUser } from '@/context/user.provider';
 
 
@@ -20,7 +20,7 @@ const ChangePassword: React.FC = () => {
   
 
   const methods = useForm({
-    // resolver: zodResolver(resetPasswordValidationSchema),
+    resolver: zodResolver(changePasswordValidationSchema),
     // defaultValues: {
     //   email: emailQuery, // Set email as default value
     // },

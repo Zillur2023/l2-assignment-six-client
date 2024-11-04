@@ -26,6 +26,18 @@ export const resetPasswordValidationSchema = z.object({
     .min(4, "Password needs to be at lest 4 character"),
 });
 
+export const changePasswordValidationSchema = z.object({
+  email: z.string().trim().email("Please enter a valid email"),
+  oldPassword: z
+    .string()
+    .trim()
+    .min(1, "Old Password is required"),
+  newPassword: z
+    .string()
+    .trim()
+    .min(1, "New Password is required"),
+});
+
 export const postUpdateValidationSchema = z.object({
   isPremium: z.boolean().optional(), 
   title: z.string().min(1, "Please enter your title!"),
