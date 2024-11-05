@@ -61,7 +61,7 @@ export default function CustomModal({
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">{title}</ModalHeader>
-              <ModalBody>{children}</ModalBody>
+              <ModalBody className="overflow-y-auto max-h-[90vh]">{children}</ModalBody>
              {
               footerButton &&  <ModalFooter>
               <Button color="danger" variant="light" onPress={onClose}>
