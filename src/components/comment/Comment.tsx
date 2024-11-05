@@ -28,10 +28,11 @@ import { useUser } from "@/context/user.provider";
 interface CommentProps {
   postId: string;
   openButton: ReactNode;
-  comment?: boolean
+  comment?: boolean;
+  focusRef?:(el: HTMLInputElement | null) => void;
 }
 
-const Comment: React.FC<CommentProps> = ({ postId, openButton, comment=false }) => {
+const Comment: React.FC<CommentProps> = ({ postId, openButton, comment, focusRef }) => {
   // const { user } = useAppSelector((state: RootState) => state.auth);
   const { user } = useUser();
   const { data: userData } = useGetUserQuery(user?.email, {
@@ -78,7 +79,9 @@ const Comment: React.FC<CommentProps> = ({ postId, openButton, comment=false }) 
     }
   };
 
-  const commentData =  comment ? allCommentData?.data?.slice(0,2) : allCommentData?.data
+  const commentData = comment
+    ? allCommentData?.data?.slice(0, 2)
+    : allCommentData?.data;
 
   // console.log('commentPostId----',comment)
 
@@ -93,7 +96,6 @@ const Comment: React.FC<CommentProps> = ({ postId, openButton, comment=false }) 
         <div className="mb-4">
           <Posts postId={postId} comment={false} />
         </div>
-        
       </CustomModal>
       <div className="flex-1 overflow-y-auto px-4">
         <div className="space-y-4">
@@ -125,7 +127,7 @@ const Comment: React.FC<CommentProps> = ({ postId, openButton, comment=false }) 
             className="flex items-center justify-center gap-2 my-3"
           >
             <div className=" w-full">
-              <CustomInput label="Comment" name="commentText" size="sm" />
+              <CustomInput label="Comment" name="commentText" size="sm" focusRef={focusRef} />
             </div>
             <Button
               type="submit"

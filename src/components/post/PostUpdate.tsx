@@ -56,6 +56,7 @@ const PostUpdate: React.FC<UpdatePostProps> = ({ updatePostData, btn }) => {
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
   // const [contentValue, setContentValue] = useState("")
   // console.log({ contentValue });
+  // const [contentState, setContenState] = useState('')
 
   const [createPost] = useCreatePostMutation();
   const [updatePost] = useUpdatePostMutation();
@@ -64,14 +65,19 @@ const PostUpdate: React.FC<UpdatePostProps> = ({ updatePostData, btn }) => {
     resolver: zodResolver(postUpdateValidationSchema),
   });
 
-  const { handleSubmit, control, setValue, register, reset, watch } = methods;
+  const { handleSubmit, control, setValue, register, reset } = methods;
 
   // const contentValue = watch("content");
   const contentValue = useWatch({ control, name: "content" });
   // const contentValue = useDebounce(content)
-  
 
-  console.log({contentValue})
+  // useEffect(() => {
+  //   setContenState(contentValue)
+  // }, [contentValue])
+  
+  // const contentValue = useDebounce(contentState)
+
+  // console.log({contentValue})
 
   // const contentValue = useDebounce(content);
 

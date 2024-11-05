@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 // import Image from "next/image";
 import {
   Button,
@@ -76,6 +76,12 @@ const Posts: React.FC<PostsProps> = ({ postId, comment = true }) => {
   const [updateDownvote] = useUpdateDownvoteMutation();
   const [updateFollowUnfollow] = useUpdateFollowUnfollowMutation();
   const [deletePost] = useDeletePostMutation();
+  const inputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
+  console.log({inputRefs})
+
+  const handleCommentClick = (postId: string) => {
+    inputRefs?.current[postId]?.focus();
+  };
 
   const handleUpvote = async (postId: string) => {
     if (!userData?.data?._id) {
@@ -329,6 +335,7 @@ const Posts: React.FC<PostsProps> = ({ postId, comment = true }) => {
                   <Button
                     size="sm"
                     className="flex items-center  bg-transparent hover:bg-gray-300 "
+                    onClick={() => handleCommentClick(post?._id)}
                   >
                     <MessageCircle size={18} />
                     <span>{post?.comments?.length}</span>
@@ -352,6 +359,7 @@ const Posts: React.FC<PostsProps> = ({ postId, comment = true }) => {
                   </p>
                 }
                 comment={comment ? true : false}
+                focusRef={(el) => (inputRefs.current[post._id] = el)} 
               />
             </Card>
           ))}

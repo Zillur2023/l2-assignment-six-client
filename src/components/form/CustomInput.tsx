@@ -13,6 +13,8 @@ interface CustomInputProps {
   type?: "text" | "password";
   size?: "sm" | "md" | "lg";
   isReadOnly?: boolean;
+  // focusRef?: React.Ref<HTMLInputElement>; 
+  focusRef?: (el: HTMLInputElement | null) => void;
 }
 
 export default function CustomInput({
@@ -21,13 +23,15 @@ export default function CustomInput({
   required = false,
   type = "text",
   size = "md",
-  isReadOnly=false
+  isReadOnly=false,
+  focusRef,
 }: CustomInputProps) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { register, formState: { errors } } = useFormContext();
 
   const inputType = type === "password" && isPasswordVisible ? "text" : type;
   const togglePasswordVisibility = () => setIsPasswordVisible(!isPasswordVisible);
+  console.log({focusRef})
 
   return (
     <div>
@@ -40,6 +44,11 @@ export default function CustomInput({
         errorMessage={errors[name]?.message as string}
         isInvalid={Boolean(errors[name])}
         isReadOnly={isReadOnly}
+        // ref={focusRef}
+        ref={(e) => {
+          register(name).ref(e); // Register ref for react-hook-form
+          if (focusRef) focusRef(e); // Apply focusRef as well
+        }}
         endContent={
           type === "password" && (
             <button

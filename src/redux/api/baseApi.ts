@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { logout } from "@/services/AuthSerivce";
+// import { logout } from "@/services/AuthSerivce";
 import {  setUser } from "../features/auth/authSlice";
 import { RootState } from "../store";
 import {
