@@ -8,6 +8,7 @@ import {
   FormProvider,
   SubmitHandler,
   useForm,
+  useWatch,
 } from "react-hook-form";
 // import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -63,22 +64,27 @@ const PostUpdate: React.FC<UpdatePostProps> = ({ updatePostData, btn }) => {
     resolver: zodResolver(postUpdateValidationSchema),
   });
 
-  const { handleSubmit, setValue, register, reset, watch } = methods;
+  const { handleSubmit, control, setValue, register, reset, watch } = methods;
 
-  // const contentValue = useDebounce(watch("content"));
-  const contentValue = watch("content");
+  // const contentValue = watch("content");
+  const contentValue = useWatch({ control, name: "content" });
+  // const contentValue = useDebounce(content)
+  
+
+  console.log({contentValue})
 
   // const contentValue = useDebounce(content);
 
   // Populate form when updating
-  // useEffect(() => {
-  //   if (updatePostData) {
-  //     setValue("title", updatePostData?.title);
-  //     setValue("category", updatePostData?.category);
-  //     setValue("content", updatePostData?.content);
-  //     // setValue("content", contentValue);
-  //   }
-  // }, [updatePostData, setValue, contentValue]);
+  useEffect(() => {
+    if (updatePostData) {
+      setValue("isPremium", updatePostData?.isPremium)
+      setValue("title", updatePostData?.title);
+      setValue("category", updatePostData?.category);
+      // setValue("content", updatePostData?.content);
+      // setValue("content", contentValue);
+    }
+  }, [updatePostData, setValue, ]);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     console.log("PostUpdateformData", data);

@@ -47,7 +47,7 @@ export default function CustomModal({
     <>
    
       {openButton?  
-          <div className="bg-transparent hover:bg-gray-300 py-1 px-2 rounded-md" onClick={onOpen}>{openButton}</div>
+          <div onClick={onOpen}>{openButton}</div>
          : <Button
         className={buttonClassName}
         variant={buttonVariant}

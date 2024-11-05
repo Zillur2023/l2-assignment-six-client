@@ -41,6 +41,7 @@ const CommentModal: React.FC<CommentModalProps> = ({ postId, openButton }) => {
   const { data: allCommentData } = useGetAllCommentQuery(postId);
   const [commentLoading, setCommentLoading] = useState(false);
 
+
   const methods = useForm();
 
   const { handleSubmit, reset, watch } = methods;
@@ -77,72 +78,90 @@ const CommentModal: React.FC<CommentModalProps> = ({ postId, openButton }) => {
     }
   };
 
-  return (
-    <CustomModal
-      // title={<Author author={postData?.data?.[0]?.author} nameClass="text-lg font-semibold" />}
-      title=""
-      openButton={openButton}
-      // onUpdate={handleSubmit(onSubmit)}
-      footerButton={false}
-    >
-      <div className="flex-1 overflow-y-auto px-4">
-        <div className="mb-4">
-          <Posts postId={postId} commentModal={false} />
-        </div>
-        <div className="space-y-4">
-          {allCommentData?.data?.map((comment: any) => (
-            <div key={comment?._id} className="flex items-start space-x-2">
-              <Tooltip content={comment?.userId?.email}>
-                <Avatar src={comment?.userId?.image} alt="Commenter" />
-              </Tooltip>
-              <div className="bg-gray-100 p-2 rounded-lg">
-                <div className="flex gap-3 ">
-                  <p>
-                    <strong>{comment?.userId?.name}</strong>
-                  </p>
-                  <Trash2
-                    onClick={() => handleDeleteComment(comment?._id)}
-                    className="text-red-500 cursor-pointer size-4"
-                  />
-                </div>
-                {/* {comment?.author?._id == userData?.data?._id &&  <Trash2 onClick={() => handleDeleteComment(comment?._id)} className="text-red-500 cursor-pointer" />} */}
+  const commentContent =   <div className="flex-1 overflow-y-auto px-4">
+    {/* <div className="mb-4">
+      <Posts postId={postId} commentModal={false} />
+    </div> */}
+    <div className="space-y-4">
+      {allCommentData?.data?.map((comment: any) => (
+        <div key={comment?._id} className="flex items-start space-x-2">
+          <Tooltip content={comment?.userId?.email}>
+            <Avatar src={comment?.userId?.image} alt="Commenter" />
+          </Tooltip>
+          <div className=" bg-transparent text-gray-500 p-2 rounded-lg">
+            <div className="flex gap-3 ">
+              <p>
+                <strong>{comment?.userId?.name}</strong>
+              </p>
+              <Trash2
+                onClick={() => handleDeleteComment(comment?._id)}
+                className="text-red-500 cursor-pointer size-4"
+              />
+            </div>
+            {/* {comment?.author?._id == userData?.data?._id &&  <Trash2 onClick={() => handleDeleteComment(comment?._id)} className="text-red-500 cursor-pointer" />} */}
 
-                <p>{comment?.commentText}</p>
-              </div>
-            </div>
-          ))}
+            <p>{comment?.commentText}</p>
+          </div>
         </div>
-        <FormProvider {...methods}>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex items-center justify-center gap-2 my-3"
-          >
-            <div className=" w-full">
-              <CustomInput label="Comment" name="commentText" size="sm" />
-            </div>
-            <Button
-              type="submit"
-              color={commentText ? "secondary" : "default"}
-              className={!commentText ? "bg-gray-300" : ""}
-              disabled={!commentText}
+      ))}
+    </div>
+    <FormProvider {...methods}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex items-center justify-center gap-2 my-3"
+      >
+        <div className=" w-full">
+          <CustomInput label="Comment" name="commentText" size="sm" />
+        </div>
+        <Button
+          type="submit"
+          color={commentText ? "secondary" : "default"}
+          className={!commentText ? "bg-gray-300" : ""}
+          disabled={!commentText}
+        >
+          {commentLoading ? (
+            <Spinner /> // Show spinner when loading
+          ) : (
+            "Comment"
+          )}
+        </Button>
+        {/* <LoadingButton
+              type='submit'
+              buttonId="commentModal"
+              // loading={isSubmitting}
             >
-              {commentLoading ? (
-                <Spinner /> // Show spinner when loading
-              ) : (
-                "Comment"
-              )}
-            </Button>
-            {/* <LoadingButton
-                  type='submit'
-                  buttonId="commentModal"
-                  // loading={isSubmitting}
-                >
-                  Comment
-                </LoadingButton> */}
-          </form>
-        </FormProvider>
-      </div>
-    </CustomModal>
+              Comment
+            </LoadingButton> */}
+      </form>
+    </FormProvider>
+  </div>
+
+  return (
+    // <CustomModal
+    //   // title={<Author author={postData?.data?.[0]?.author} nameClass="text-lg font-semibold" />}
+    //   title=""
+    //   openButton={<button className="flex items-center gap-3">
+    //     <span>{"See all comments"}</span>
+    //   </button>}
+    //   // onUpdate={handleSubmit(onSubmit)}
+    //   footerButton={false}
+    // >
+    // {commentContent}
+    // </CustomModal>
+    <div>
+      <CustomModal
+        title=""
+        openButton={openButton}
+        footerButton={false}
+        // onClose={() => setShowModal(false)} // Close modal
+      >
+        <div className="mb-4">
+      <Posts postId={postId} commentModal={false} />
+    </div>
+        {/* {commentContent} */}
+      </CustomModal>
+      {commentContent}
+  </div>
   );
 };
 

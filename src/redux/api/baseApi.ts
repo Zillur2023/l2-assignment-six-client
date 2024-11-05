@@ -68,7 +68,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 
       result = await baseQuery(args, api, extraOptions);
     } else {
-      logout();
+      // logout();
     }
   }
 

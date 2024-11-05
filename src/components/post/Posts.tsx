@@ -42,6 +42,7 @@ import CustomButton from "../shared/CustomButton";
 import { IPost, IPostData, IUserData } from "@/type";
 import NoDataFound from "../shared/NoDataFound";
 import { useUser } from "@/context/user.provider";
+import Comment from "../comment/Comment";
 
 interface PostsProps {
   postId?: string;
@@ -200,13 +201,13 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
                 </CustomButton>
               )}
               {post?.author?._id === userData?.data?._id && (
-                <PostUpdate updatePostData={post} btn={<Pencil />} />
+                <PostUpdate updatePostData={post} btn={<Pencil className="bg-gray-300 p-1 rounded-md w-full h-full" />} />
               )}
               {post?.author?._id === userData?.data?._id && (
                 <CustomModal
                   title=""
                   openButton={
-                    <Trash2 className="text-red-500 cursor-pointer" />
+                    <Trash2 className="text-red-500 cursor-pointer bg-gray-300 p-1 rounded-md w-full h-full" />
                   }
                   actionButtonText="Delete"
                   onUpdate={() => handleDeleteClick(post?._id)}
@@ -292,8 +293,8 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
               <span>{post.downvotes.length}</span>
             </CustomButton>
 
-            {/* <div className=""> */}
-            {commentModal ? (
+            <div className="">
+            {/* {commentModal ? (
               <CommentModal
                 postId={post?._id}
                 openButton={
@@ -311,8 +312,15 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
                 <MessageCircle size={18} />
                 <span>{post?.comments?.length}</span>
               </Button>
-            )}
-            {/* </div> */}
+            )} */}
+            <Button
+                size="sm"
+                className="flex items-center  bg-transparent hover:bg-gray-300 "
+              >
+                <MessageCircle size={18} />
+                <span>{post?.comments?.length}</span>
+              </Button>
+            </div>
             <Button
               size="sm"
               className="flex items-center  bg-transparent hover:bg-gray-300 "
@@ -320,7 +328,18 @@ const Posts: React.FC<PostsProps> = ({ postId, commentModal = true }) => {
               <Share2 size={18} />
               {/* <span>{post.comments?.length}</span> */}
             </Button>
+           
           </CardFooter>
+          {/* <Comment postId={post?._id} /> */}
+          <CommentModal
+                postId={post?._id}
+                openButton={
+                  <p className=" font-semibold my-3 cursor-pointer hover:underline">
+                    {/* See all comments */}
+                    {commentModal ? "See all comment" : " "}
+                  </p>
+                }
+              />
         </Card>
       ))}
     </div> : <NoDataFound/>
