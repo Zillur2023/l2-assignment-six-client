@@ -78,7 +78,31 @@ const CommentModal: React.FC<CommentModalProps> = ({ postId, openButton }) => {
     }
   };
 
-  const commentContent =   <div className="flex-1 overflow-y-auto px-4">
+
+  return (
+    // <CustomModal
+    //   // title={<Author author={postData?.data?.[0]?.author} nameClass="text-lg font-semibold" />}
+    //   title=""
+    //   openButton={<button className="flex items-center gap-3">
+    //     <span>{"See all comments"}</span>
+    //   </button>}
+    //   // onUpdate={handleSubmit(onSubmit)}
+    //   footerButton={false}
+    // >
+    // {commentContent}
+    // </CustomModal>
+    <div>
+      <CustomModal
+        title=""
+        openButton={openButton}
+        footerButton={false}
+        // onClose={() => setShowModal(false)} // Close modal
+      >
+        <div className="mb-4">
+      <Posts postId={postId} commentModal={false} />
+    </div>
+      </CustomModal>
+      <div className="flex-1 overflow-y-auto px-4">
     {/* <div className="mb-4">
       <Posts postId={postId} commentModal={false} />
     </div> */}
@@ -135,32 +159,6 @@ const CommentModal: React.FC<CommentModalProps> = ({ postId, openButton }) => {
       </form>
     </FormProvider>
   </div>
-
-  return (
-    // <CustomModal
-    //   // title={<Author author={postData?.data?.[0]?.author} nameClass="text-lg font-semibold" />}
-    //   title=""
-    //   openButton={<button className="flex items-center gap-3">
-    //     <span>{"See all comments"}</span>
-    //   </button>}
-    //   // onUpdate={handleSubmit(onSubmit)}
-    //   footerButton={false}
-    // >
-    // {commentContent}
-    // </CustomModal>
-    <div>
-      <CustomModal
-        title=""
-        openButton={openButton}
-        footerButton={false}
-        // onClose={() => setShowModal(false)} // Close modal
-      >
-        <div className="mb-4">
-      <Posts postId={postId} commentModal={false} />
-    </div>
-        {/* {commentContent} */}
-      </CustomModal>
-      {commentContent}
   </div>
   );
 };
