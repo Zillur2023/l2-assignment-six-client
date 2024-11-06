@@ -1,7 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// import { logout } from "@/services/AuthSerivce";
-import {  setUser } from "../features/auth/authSlice";
-import { RootState } from "../store";
 import {
   BaseQueryApi,
   BaseQueryFn,
@@ -10,6 +7,7 @@ import {
   FetchArgs,
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
+import { getAccessToken, logout } from "@/services/AuthSerivce";
 
 const baseQuery = fetchBaseQuery({
   // baseUrl: `${config.server_url}/api`,
@@ -17,12 +15,17 @@ const baseQuery = fetchBaseQuery({
   // baseUrl: `https://l2-assignment-six-server.vercel.app/api/v1`,
 
   credentials: "include",
-  prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as RootState).auth.token;
+  prepareHeaders: async(headers) => {
+   try {
+    const accessToken = await  getAccessToken()
+    console.log({accessToken})
 
-    if (token) {
-      headers.set("authorization", `${token}`);
+    if (accessToken) {
+      headers.set("authorization", `${accessToken}`);
     }
+   } catch (error:any) {
+    console.log({error})
+   }
 
     return headers;
   },
@@ -42,34 +45,36 @@ const baseQueryWithRefreshToken: BaseQueryFn<
   // if (result?.error?.status === 403) {
   //   toast.error('Password not match')
   // }
-  console.log("result?.", result);
+  console.log("result?.error?.status === 401", result?.error?.status === 401);
 
   if (result?.error?.status === 401) {
     //* Send Refresh
     console.log("Sending refresh token");
 
-    // const res = await fetch(`${config.server_url}/api/auth/refresh-token`, {
+    try {
+       // const res = await fetch(`${config.server_url}/api/auth/refresh-token`, {
     const res = await fetch(`http://localhost:5000/api/v1/auth/refresh-token`, {
       method: "POST",
       credentials: "include",
     });
+    console.log({res})
 
-    const data = await res.json();
+    if (res.ok) {
+      // If the refresh was successful, proceed with baseQuery
+       result = await baseQuery(args, api, extraOptions);
+  } else {
+      // If the refresh failed, log the user out
+      await logout();
+  }
+} catch (error) {
+  console.error("Network or fetch error:", error);
+  // Handle network or fetch errors here, possibly log out as well
+  await logout();
+}
 
-    if (data?.data?.accessToken) {
-      const user = (api.getState() as RootState).auth.user;
-
-      api.dispatch(
-        setUser({
-          user,
-          token: data.data.accessToken,
-        })
-      );
-
-      result = await baseQuery(args, api, extraOptions);
-    } else {
-      // logout();
-    }
+   
+   
+    
   }
 
   return result;

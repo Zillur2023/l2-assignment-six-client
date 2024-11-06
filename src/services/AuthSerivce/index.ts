@@ -21,7 +21,14 @@ export const getUser = async () => {
 //   });
 // };
 
-export const logout = async () => {
-  // cookies().delete("accessToken");
+export const logout =  async() => {
+  cookies().delete("accessToken");
   cookies().delete("refreshToken");
 };
+
+export const getAccessToken =  async() => {
+  const result = cookies().get("accessToken")?.value;
+
+  return result
+}
+

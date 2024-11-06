@@ -81,8 +81,8 @@ const LoginPage = () => {
     <div className="flex h-[calc(100vh-100px)] flex-col items-center justify-center">
       <h3 className="my-2 text-xl font-bold">Login</h3>
       <div className="w-[35%]">
-        <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)}>
+        <FormProvider {...methods} >
+          <form onSubmit={handleSubmit(onSubmit)} >
             <div className="py-3">
               <CustomInput label="Email" name="email" size="sm" />
             </div>
