@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { ReactNode, useState } from "react";
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Spinner, Tooltip } from "@nextui-org/react";
+import { Button, Spinner, Tooltip } from "@nextui-org/react";
 import {
   FieldValues,
   FormProvider,
@@ -9,7 +9,6 @@ import {
   useForm,
 } from "react-hook-form";
 import { Avatar } from "@nextui-org/react";
-import { Trash2 } from "lucide-react"; // Import the X icon for the close button
 // import { useAppSelector } from "@/redux/hooks";
 import { useGetUserQuery } from "@/redux/features/user/userApi";
 import {
@@ -23,9 +22,9 @@ import CustomModal from "../modal/CustomModal";
 import CustomInput from "../form/CustomInput";
 import Posts from "../post/Posts";
 import { useUser } from "@/context/user.provider";
-import { VerticalDotsIcon } from "../table/VerticalDotsIcon";
 import ActionButton from "../shared/ActionButton";
 import { useRouter } from "next/navigation";
+import { IComment } from "@/type";
 // import LoadingButton from '../shared/LoadingButton';
 
 interface CommentProps {
@@ -45,7 +44,6 @@ const Comment: React.FC<CommentProps> = ({ postId, openButton, comment, focusRef
   const [deleteComment] = useDeleteCommentMutation();
   const [createComment] = useCreateCommentMutation();
   const { data: allCommentData } = useGetAllCommentQuery(postId);
-  console.log({allCommentData})
   const [commentLoading, setCommentLoading] = useState(false);
 
   const methods = useForm();
@@ -109,7 +107,7 @@ const Comment: React.FC<CommentProps> = ({ postId, openButton, comment, focusRef
       </CustomModal>
       <div className="flex-1 overflow-y-auto px-4">
         <div className="space-y-4">
-          {commentData?.map((comment: any) => (
+          {commentData?.map((comment: IComment) => (
             <div key={comment?._id} className="flex items-start space-x-2">
               <Tooltip content={comment?.userId?.email}>
                 <Avatar src={comment?.userId?.image} alt="Commenter" />

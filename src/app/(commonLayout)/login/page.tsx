@@ -72,7 +72,7 @@ const LoginPage = () => {
   const handleForgetPassword = async() => {
     const res = await forgetPassword({email:emailValue})
   
-    if(user){
+    if(res){
       router.push(forgetPasswordPath as string)
     }
   };

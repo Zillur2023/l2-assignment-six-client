@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useState, useEffect, ChangeEvent, ReactNode } from "react";
+import React, { useState, ChangeEvent, ReactNode } from "react";
 import {
   // Controller,
   FieldValues,
@@ -49,9 +49,7 @@ interface UpdatePostProps {
 const PostUpdate: React.FC<UpdatePostProps> = ({ updatePostData, btn }) => {
   // const { user } = useAppSelector((state: RootState) => state.auth);
   const { user } = useUser();
-  const { data: userData } = useGetUserQuery<IUserData>(user?.email, {
-    skip: !user?.email,
-  });
+  const { data: userData } = useGetUserQuery<IUserData>(user?.email, { skip: !user?.email});
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
   // const [contentValue, setContentValue] = useState("")
@@ -80,15 +78,15 @@ const PostUpdate: React.FC<UpdatePostProps> = ({ updatePostData, btn }) => {
   // const contentValue = useDebounce(content);
 
   // Populate form when updating
-  useEffect(() => {
-    if (updatePostData) {
-      setValue("isPremium", updatePostData?.isPremium)
-      setValue("title", updatePostData?.title);
-      setValue("category", updatePostData?.category);
-      // setValue("content", updatePostData?.content);
-      // setValue("content", contentValue);
-    }
-  }, [updatePostData, setValue, ]);
+  // useEffect(() => {
+  //   if (postData) {
+  //     setValue("isPremium", postData?.data?.[0]?.isPremium)
+  //     setValue("title", postData?.data?.[0]?.title);
+  //     setValue("category", postData?.data?.[0]?.category);
+  //     // setValue("content", updatePostData?.content);
+  //     // setValue("content", contentValue);
+  //   }
+  // }, [postData, setValue, ]);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
 
@@ -166,6 +164,7 @@ const PostUpdate: React.FC<UpdatePostProps> = ({ updatePostData, btn }) => {
             </Checkbox>
           )}
           <div className="py-3">
+            {/* <CustomInput label="Title" name="title" size="sm" value={postData?.data?.title || ""} /> */}
             <CustomInput label="Title" name="title" size="sm" />
           </div>
           <div className="py-3">
@@ -173,6 +172,7 @@ const PostUpdate: React.FC<UpdatePostProps> = ({ updatePostData, btn }) => {
               label="Category"
               name="category"
               options={categoryOptions}
+              // value={postData?.data?.category || ""}
             />
           </div>
           {/* <div className=" py-3">

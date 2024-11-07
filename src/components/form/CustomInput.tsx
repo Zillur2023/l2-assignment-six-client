@@ -12,6 +12,7 @@ interface CustomInputProps {
   required?: boolean;
   type?: "text" | "password";
   size?: "sm" | "md" | "lg";
+  value?: string;
   isReadOnly?: boolean;
   // focusRef?: React.Ref<HTMLInputElement>; 
   focusRef?: (el: HTMLInputElement | null) => void;
@@ -23,6 +24,7 @@ export default function CustomInput({
   required = false,
   type = "text",
   size = "md",
+  value,
   isReadOnly=false,
   focusRef,
 }: CustomInputProps) {
@@ -40,6 +42,7 @@ export default function CustomInput({
         label={label}
         required={required}
         size={size}
+        value={value}
         type={inputType}
         errorMessage={errors[name]?.message as string}
         isInvalid={Boolean(errors[name])}

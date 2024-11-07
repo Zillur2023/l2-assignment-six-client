@@ -8,7 +8,7 @@ export const postApi = baseApi.injectEndpoints({
         method: "POST",
         body: postData,
       }),
-      invalidatesTags: ["Post","User"],
+      invalidatesTags: ["Post","User","Comment"],
     }),
     getAllPost: builder.query({
       query: ({

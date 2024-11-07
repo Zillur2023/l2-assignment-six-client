@@ -19,7 +19,7 @@ const AboutUs = () => {
           {/* Image Section */}
           <div className="relative h-80 w-full md:h-full">
             <Image
-              src="/images/about-us.jpg"
+              src="https://res.cloudinary.com/dsisnya7j/image/upload/v1730976861/dlao2qwnnkfncpzfxjlw.webp"
               alt="Travel illustration"
               layout="fill"
               objectFit="cover"

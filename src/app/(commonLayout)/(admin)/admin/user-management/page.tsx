@@ -168,8 +168,28 @@ const UserManagementPage = () => {
         return <p> {user?.following?.length} </p>
       case "isVerified":
         return (
-          <p> {(cellValue as boolean) && <span className=' border rounded-md px-2 py-0 text-blue-400'>{'Verified'}</span>} </p>
+          <p> {(cellValue as boolean) && <span className=' border rounded-md px-2 py-0 text-blue-400 bg-blue-100'>{'Verified'}</span>} </p>
         );
+        case "paymentStatus":
+          return (
+            <p>
+              {user?.paymentStatus === "Paid" && (
+                <span className="border rounded-md px-2 py-0 text-green-400 bg-green-100">
+                  Paid
+                </span>
+              )}
+              {user?.paymentStatus === "Pending" && (
+                <span className="border rounded-md px-2 py-0 text-yellow-400 bg-yellow-100">
+                  Pending
+                </span>
+              )}
+              {user?.paymentStatus === "Failed" && (
+                <span className="border rounded-md px-2 py-0 text-red-400 bg-red-100">
+                  Failed
+                </span>
+              )}
+            </p>
+          );
       case "actions":
         return (
           <div className="relative flex justify-end items-center gap-2">

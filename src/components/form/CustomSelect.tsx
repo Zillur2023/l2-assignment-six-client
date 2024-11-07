@@ -10,6 +10,7 @@ interface IProps extends IInput {
     uid: string;
     name: string;
   }[];
+  value?: string
 }
 
 export default function CustomSelect({
@@ -18,6 +19,7 @@ export default function CustomSelect({
   label,
   variant = "bordered",
   disabled,
+  value,
 }: IProps) {
   const {
     register,
@@ -31,6 +33,7 @@ export default function CustomSelect({
       isDisabled={disabled}
       label={label}
       variant={variant}
+      value={value}
     >
       {options.map((option) => (
         <SelectItem key={option.uid}>{option.name}</SelectItem>

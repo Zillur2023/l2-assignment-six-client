@@ -5,7 +5,6 @@ import { Button } from '@nextui-org/react';
 import { FieldValues, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import CustomInput from '@/components/form/CustomInput';
 import { changePasswordValidationSchema } from '@/schemas';
 import { useUser } from '@/context/user.provider';
@@ -14,8 +13,9 @@ import { useChangePasswordMutation } from '@/redux/features/auth/authApi';
 
 const ChangePassword: React.FC = () => {
   const {user} = useUser()
-  const router = useRouter()
-  const [resetPassword] = useChangePasswordMutation();
+  const [changePassword] = useChangePasswordMutation();
+  // const [email, setEmail] = useState(user?.email, {skip: !user?.email,
+  // })
 
 
   
@@ -45,9 +45,9 @@ const ChangePassword: React.FC = () => {
     const toastId = toast.loading("loading...");
 
     try {
-      const res = await resetPassword(data).unwrap();
-      if (res) {
-        router.push("/login")
+      const res = await changePassword(data).unwrap();
+      if (res.success) {
+        // router.push("/login")
         toast.success(res?.message, { id: toastId });
           
       }
@@ -63,7 +63,7 @@ const ChangePassword: React.FC = () => {
       <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
           <div className="py-3">
-            <CustomInput label="Email" name="email" size="sm" isReadOnly={true} />
+            <CustomInput label="Email" name="email" size="sm" value={user?.email || ''}  isReadOnly={true} />
           </div>
           <div className="py-3">
             <CustomInput

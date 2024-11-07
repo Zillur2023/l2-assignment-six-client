@@ -18,6 +18,7 @@ import {
   Share2,
   Trash2,
   Pencil,
+  Download,
 } from "lucide-react";
 // import { useAppSelector } from "@/redux/hooks";
 // import { RootState } from "@/redux/store";
@@ -42,6 +43,9 @@ import { IPost, IPostData, IUserData } from "@/type";
 import NoDataFound from "../shared/NoDataFound";
 import { useUser } from "@/context/user.provider";
 import Comment from "../comment/Comment";
+import ActionButton from "../shared/ActionButton";
+import { generatePDF } from "@/utils/generatePDF";
+import useDebounce from "@/hooks/debounce.hooks";
 
 interface PostsProps {
   postId?: string;
@@ -61,10 +65,18 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
     "highestUpvotes" | "lowestUpvotes" | "highestDownvotes" | "lowestDownvotes"
   >("highestUpvotes");
 
+  console.log({searchTerm})
+  
+  const debounceSearch = useDebounce(searchTerm)
+  
+  console.log({debounceSearch})
+  
+
   const queryPost = postId
     ? { postId }
     : {
-        searchTerm,
+        // searchTerm,
+        searchTerm : debounceSearch,
         category: category || undefined,
         sortBy,
         isPremium: userData?.data?.isVerified ? true : undefined,
@@ -77,6 +89,8 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
   const [updateFollowUnfollow] = useUpdateFollowUnfollowMutation();
   const [deletePost] = useDeletePostMutation();
   const inputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
+
+ 
 
   const handleCommentClick = (postId: string) => {
     inputRefs?.current[postId]?.focus();
@@ -221,6 +235,7 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
                       }
                     />
                   )}
+                
                   {post?.author?._id === userData?.data?._id && (
                     <CustomModal
                       title=""
@@ -273,6 +288,7 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
               <CardFooter className="justify-between ">
                 {/* Post Interactions */}
                 {/* <Tooltip content={post?.upvotes?.[index+1]?.name}> */}
+                
 
                 <CustomButton
                   onClick={() => handleUpvote(post._id)}
@@ -330,6 +346,18 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
                   <Share2 size={18} />
                   {/* <span>{post.comments?.length}</span> */}
                 </Button>
+                {/* <Button
+                  size="sm"
+                  className="flex items-center  bg-transparent hover:bg-gray-300 "
+                >
+                   <Download size={18} onClick={() => generatePDF(post)} className="bg-gray-300 p-1 rounded-md w-full h-full" />
+                </Button> */}
+                <CustomButton
+                onClick={() => generatePDF(post)}
+                buttonId="downloadPDF"
+                >
+                  <Download size={18} />
+                </CustomButton>
               </CardFooter>
               <Comment
                 postId={post?._id}

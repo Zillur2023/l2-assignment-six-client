@@ -29,6 +29,8 @@ export interface IPost {
   upvotes: IUser[];
   downvotes: IUser[]; 
   comments:IComment[];
+  createdAt: string; 
+  updatedAt: string;
 }
 
 export interface IPostData {
