@@ -76,8 +76,6 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
   const [updateDownvote] = useUpdateDownvoteMutation();
   const [updateFollowUnfollow] = useUpdateFollowUnfollowMutation();
   const [deletePost] = useDeletePostMutation();
-  const [selectedPostId, setSelectedPostId] = useState('')
-  console.log({selectedPostId})
   const inputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
   const handleCommentClick = (postId: string) => {
@@ -335,7 +333,6 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
               </CardFooter>
               <Comment
                 postId={post?._id}
-                selectedPostId={selectedPostId}
                 openButton={
                   <p className=" font-semibold my-3 cursor-pointer hover:underline">
                     {/* See all comments */}

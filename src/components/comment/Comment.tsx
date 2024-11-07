@@ -25,19 +25,19 @@ import Posts from "../post/Posts";
 import { useUser } from "@/context/user.provider";
 import { VerticalDotsIcon } from "../table/VerticalDotsIcon";
 import ActionButton from "../shared/ActionButton";
+import { useRouter } from "next/navigation";
 // import LoadingButton from '../shared/LoadingButton';
 
 interface CommentProps {
   postId: string;
-  selectedPostId:string;
   openButton: ReactNode;
   comment?: boolean;
   focusRef?:(el: HTMLInputElement | null) => void;
 }
 
-const Comment: React.FC<CommentProps> = ({ postId, selectedPostId, openButton, comment, focusRef }) => {
+const Comment: React.FC<CommentProps> = ({ postId, openButton, comment, focusRef }) => {
   // const { user } = useAppSelector((state: RootState) => state.auth);
-  console.log({postId})
+  const router = useRouter()
   const { user } = useUser();
   const { data: userData } = useGetUserQuery(user?.email, {
     skip: !user?.email,
@@ -55,6 +55,10 @@ const Comment: React.FC<CommentProps> = ({ postId, selectedPostId, openButton, c
   const commentText = watch("commentText"); // Watch the comment input field
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    if (!userData?.data?._id) {
+      router.push("/login");
+      return;
+    }
     const updatedData = {
       ...data,
       userId: userData?.data?._id,
