@@ -28,11 +28,19 @@ export interface IPost {
   isPremium: boolean; 
   upvotes: IUser[];
   downvotes: IUser[]; 
-  comments:IUser[];
+  comments:IComment[];
 }
 
 export interface IPostData {
   data: {data: IPost[]}
+}
+
+export interface IComment {
+  _id: string;
+  postId: IPost; 
+  userId: IUser; 
+  commentText: string; 
+  // parentCommentId?: Types.ObjectId | null; 
 }
 
 

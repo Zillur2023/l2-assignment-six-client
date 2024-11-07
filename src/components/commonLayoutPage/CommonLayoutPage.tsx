@@ -12,7 +12,7 @@ const CommonLayoutPage = () => {
     // const { user } = useAppSelector((state: RootState) => state.auth);
     const { user } = useUser();
 
-    console.log('CommonLayoutpage', user)
+  
   
     useEffect(() => {
       // If not loading and userData is available

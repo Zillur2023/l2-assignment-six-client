@@ -18,7 +18,7 @@ const baseQuery = fetchBaseQuery({
   prepareHeaders: async(headers) => {
    try {
     const accessToken = await  getAccessToken()
-    console.log({accessToken})
+
 
     if (accessToken) {
       headers.set("authorization", `${accessToken}`);
@@ -45,7 +45,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
   // if (result?.error?.status === 403) {
   //   toast.error('Password not match')
   // }
-  console.log("result?.error?.status === 401", result?.error?.status === 401);
+ 
 
   if (result?.error?.status === 401) {
     //* Send Refresh
@@ -57,7 +57,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
       method: "POST",
       credentials: "include",
     });
-    console.log({res})
+
 
     if (res.ok) {
       // If the refresh was successful, proceed with baseQuery

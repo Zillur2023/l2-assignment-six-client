@@ -5,7 +5,7 @@ import { ReactNode, useState } from "react";
 
 interface LoadingButtonProps {
   onClick?: () => Promise<void>; // Async function for handling the button action
-  buttonId: string; // Unique identifier for each button
+  buttonId: string ; // Unique identifier for each button
   children: ReactNode;
   data?: IUser[];
   btnClass?: string

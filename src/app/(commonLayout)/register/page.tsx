@@ -31,7 +31,7 @@ const RegisterPage: React.FC = () => {
 
    try {
     const res = await createUser(formData).unwrap();
-    console.log({res})
+
     if (res) {
       toast.success(res?.message, {id: toastId});
       router.push("/login");

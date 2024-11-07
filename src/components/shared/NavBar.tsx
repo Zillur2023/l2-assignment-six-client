@@ -55,16 +55,16 @@ const NavBar = () => {
   const router = useRouter();
   // const { user } = useAppSelector((state: RootState) => state.auth);
   const { user, setIsLoading: userLoading } = useUser();
-  console.log("user from navbar", user);
+  
   // const user = await getUser()
   const { data: userData } = useGetUserQuery(user?.email, {
     skip: !user?.email,
   });
-  const routes = !user
-    ? publicRoutes
-    : user?.role === "admin"
-    ? adminRoutes
-    : userRoutes;
+  const routes = !user ? publicRoutes : []
+    // ? publicRoutes
+    // : user?.role === "admin"
+    // ? adminRoutes
+    // : userRoutes;
   const dispatch = useAppDispatch();
   const pathname = usePathname(); // Get the current route's pathname
   const [isLoadingLogout, setIsLoadingLogout] = useState(false);

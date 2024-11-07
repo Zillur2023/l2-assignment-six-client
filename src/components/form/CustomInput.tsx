@@ -31,7 +31,7 @@ export default function CustomInput({
 
   const inputType = type === "password" && isPasswordVisible ? "text" : type;
   const togglePasswordVisibility = () => setIsPasswordVisible(!isPasswordVisible);
-  console.log({focusRef})
+ 
 
   return (
     <div>

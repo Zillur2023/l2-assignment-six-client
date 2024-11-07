@@ -7,15 +7,15 @@ import { toast } from 'sonner';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import CustomInput from '@/components/form/CustomInput';
-import { useResetPasswordMutation } from '@/redux/features/auth/authApi';
 import { changePasswordValidationSchema } from '@/schemas';
 import { useUser } from '@/context/user.provider';
+import { useChangePasswordMutation } from '@/redux/features/auth/authApi';
 
 
 const ChangePassword: React.FC = () => {
   const {user} = useUser()
   const router = useRouter()
-  const [resetPassword] = useResetPasswordMutation();
+  const [resetPassword] = useChangePasswordMutation();
 
 
   
@@ -41,7 +41,6 @@ const ChangePassword: React.FC = () => {
       oldPassword: formData?.oldPassword,
       newPassword: formData?.newPassword,
     };
-    console.log('requestPassworddata', data)
 
     const toastId = toast.loading("loading...");
 

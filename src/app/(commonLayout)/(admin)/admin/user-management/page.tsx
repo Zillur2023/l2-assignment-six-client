@@ -67,7 +67,6 @@ const columns = [
 const UserManagementPage = () => {
   const { data: allUser, refetch } = useGetAllUserQuery('');
   const [users, setUsers] = useState<IUser[]>(allUser?.data || []);
-  console.log({users})
 
 
   // Update users state when allUser data changes
@@ -360,7 +359,6 @@ const UserManagementPage = () => {
     
   try {
     const res = await deleteUser(id).unwrap()
-    console.log({res})
     if(res) {
       toast.success(res?.message, {id: toastId})
     }

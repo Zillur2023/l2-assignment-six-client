@@ -45,7 +45,7 @@ const LoginPage = () => {
   
   const forgetPasswordPath = `/reset-password?email=${user?.data?.email}`
  
-  // console.log({forgetPasswordPath})
+
 
   const onSubmit: SubmitHandler<FieldValues> = async (formData) => {
   
@@ -71,7 +71,7 @@ const LoginPage = () => {
 
   const handleForgetPassword = async() => {
     const res = await forgetPassword({email:emailValue})
-    console.log({res})
+  
     if(user){
       router.push(forgetPasswordPath as string)
     }

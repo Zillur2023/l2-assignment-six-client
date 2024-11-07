@@ -10,7 +10,7 @@ export const authApi = baseApi.injectEndpoints({
           method: 'POST',
           body: commentData,
         }),
-        invalidatesTags: ["Comment","Post","User"]
+        invalidatesTags: ["Comment"]
       }),
       getAllComment: builder.query({
         query: (postId) => ({
@@ -24,7 +24,7 @@ export const authApi = baseApi.injectEndpoints({
           url: `/comment/delete/${commentId}`,
           method: 'DELETE',
         }),
-        invalidatesTags: ["Comment","Post","User"]
+        invalidatesTags: ["Comment"]
       }),
     }),
   });

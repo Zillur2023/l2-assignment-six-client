@@ -55,7 +55,7 @@ const PostUpdate: React.FC<UpdatePostProps> = ({ updatePostData, btn }) => {
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
   // const [contentValue, setContentValue] = useState("")
-  // console.log({ contentValue });
+
   // const [contentState, setContenState] = useState('')
 
   const [createPost] = useCreatePostMutation();
@@ -77,8 +77,6 @@ const PostUpdate: React.FC<UpdatePostProps> = ({ updatePostData, btn }) => {
   
   // const contentValue = useDebounce(contentState)
 
-  // console.log({contentValue})
-
   // const contentValue = useDebounce(content);
 
   // Populate form when updating
@@ -93,12 +91,12 @@ const PostUpdate: React.FC<UpdatePostProps> = ({ updatePostData, btn }) => {
   }, [updatePostData, setValue, ]);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log("PostUpdateformData", data);
+
     // const tempElement = document.createElement("div");
     const tempElement = document.createElement("div");
     tempElement.innerHTML = data.content;
     const plainText = tempElement.textContent || tempElement.innerText || "";
-    console.log({plainText})
+ 
     const formData = new FormData();
 
     const updatedData: any = {
@@ -107,7 +105,7 @@ const PostUpdate: React.FC<UpdatePostProps> = ({ updatePostData, btn }) => {
       author: userData?.data?._id,
       content: plainText,
     };
-    console.log({ updatedData });
+
 
     formData.append("image", imageFiles?.[0]);
 

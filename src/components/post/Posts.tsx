@@ -48,7 +48,7 @@ interface PostsProps {
   comment?: boolean;
 }
 
-const Posts: React.FC<PostsProps> = ({ postId, comment = true }) => {
+const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
   const router = useRouter();
   // const { user } = useAppSelector((state: RootState) => state.auth);
   const { user } = useUser();
@@ -70,14 +70,15 @@ const Posts: React.FC<PostsProps> = ({ postId, comment = true }) => {
         isPremium: userData?.data?.isVerified ? true : undefined,
       };
   const { data: postData } = useGetAllPostQuery<IPostData>(queryPost);
-  // console.log({ userData });
-  console.log({ postData });
+
+
   const [updateUpvote] = useUpdateUpvoteMutation();
   const [updateDownvote] = useUpdateDownvoteMutation();
   const [updateFollowUnfollow] = useUpdateFollowUnfollowMutation();
   const [deletePost] = useDeletePostMutation();
+  const [selectedPostId, setSelectedPostId] = useState('')
+  console.log({selectedPostId})
   const inputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
-  console.log({inputRefs})
 
   const handleCommentClick = (postId: string) => {
     inputRefs?.current[postId]?.focus();
@@ -145,7 +146,7 @@ const Posts: React.FC<PostsProps> = ({ postId, comment = true }) => {
     <>
       {postData?.data?.length ? (
         <div className="mt-6 space-y-6 max-w-full sm:max-w-[600px] md:max-w-[700px] lg:max-w-[800px] mx-auto">
-          {!postId && (
+       
             <div className="flex flex-col sm:flex-row  items-center justify-between ">
               <input
                 type="text"
@@ -186,7 +187,7 @@ const Posts: React.FC<PostsProps> = ({ postId, comment = true }) => {
                 ))}
               </select>
             </div>
-          )}
+        
 
           {postData?.data?.map((post) => (
             <Card
@@ -313,29 +314,12 @@ const Posts: React.FC<PostsProps> = ({ postId, comment = true }) => {
                 </CustomButton>
 
                 <div className="">
-                  {/* {Comment ? (
-              <Comment
-                postId={post?._id}
-                openButton={
-                  <button className="flex items-center gap-3">
-                    <MessageCircle size={18} />
-                    <span>{post?.comments?.length}</span>
-                  </button>
-                }
-              />
-            ) : (
-              <Button
-                size="sm"
-                className="flex items-center  bg-transparent hover:bg-gray-300 "
-              >
-                <MessageCircle size={18} />
-                <span>{post?.comments?.length}</span>
-              </Button>
-            )} */}
+                 
+                
                   <Button
                     size="sm"
                     className="flex items-center  bg-transparent hover:bg-gray-300 "
-                    onClick={() => handleCommentClick(post?._id)}
+                    onClick={() => post?._id && (handleCommentClick(post._id), setSelectedPostId(post._id))}
                   >
                     <MessageCircle size={18} />
                     <span>{post?.comments?.length}</span>
@@ -349,9 +333,9 @@ const Posts: React.FC<PostsProps> = ({ postId, comment = true }) => {
                   {/* <span>{post.comments?.length}</span> */}
                 </Button>
               </CardFooter>
-              {/* <Comment postId={post?._id} /> */}
               <Comment
                 postId={post?._id}
+                selectedPostId={selectedPostId}
                 openButton={
                   <p className=" font-semibold my-3 cursor-pointer hover:underline">
                     {/* See all comments */}

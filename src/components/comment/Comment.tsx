@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { ReactNode, useState } from "react";
-import { Button, Spinner, Tooltip } from "@nextui-org/react";
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Spinner, Tooltip } from "@nextui-org/react";
 import {
   FieldValues,
   FormProvider,
@@ -23,17 +23,21 @@ import CustomModal from "../modal/CustomModal";
 import CustomInput from "../form/CustomInput";
 import Posts from "../post/Posts";
 import { useUser } from "@/context/user.provider";
+import { VerticalDotsIcon } from "../table/VerticalDotsIcon";
+import ActionButton from "../shared/ActionButton";
 // import LoadingButton from '../shared/LoadingButton';
 
 interface CommentProps {
   postId: string;
+  selectedPostId:string;
   openButton: ReactNode;
   comment?: boolean;
   focusRef?:(el: HTMLInputElement | null) => void;
 }
 
-const Comment: React.FC<CommentProps> = ({ postId, openButton, comment, focusRef }) => {
+const Comment: React.FC<CommentProps> = ({ postId, selectedPostId, openButton, comment, focusRef }) => {
   // const { user } = useAppSelector((state: RootState) => state.auth);
+  console.log({postId})
   const { user } = useUser();
   const { data: userData } = useGetUserQuery(user?.email, {
     skip: !user?.email,
@@ -41,6 +45,7 @@ const Comment: React.FC<CommentProps> = ({ postId, openButton, comment, focusRef
   const [deleteComment] = useDeleteCommentMutation();
   const [createComment] = useCreateCommentMutation();
   const { data: allCommentData } = useGetAllCommentQuery(postId);
+  console.log({allCommentData})
   const [commentLoading, setCommentLoading] = useState(false);
 
   const methods = useForm();
@@ -54,6 +59,7 @@ const Comment: React.FC<CommentProps> = ({ postId, openButton, comment, focusRef
       ...data,
       userId: userData?.data?._id,
       postId,
+      // postId:selectedPostId,
     };
     try {
       setCommentLoading(true);
@@ -83,7 +89,7 @@ const Comment: React.FC<CommentProps> = ({ postId, openButton, comment, focusRef
     ? allCommentData?.data?.slice(0, 2)
     : allCommentData?.data;
 
-  // console.log('commentPostId----',comment)
+
 
   return (
     <div>
@@ -109,10 +115,12 @@ const Comment: React.FC<CommentProps> = ({ postId, openButton, comment, focusRef
                   <p>
                     <strong>{comment?.userId?.name}</strong>
                   </p>
-                  <Trash2
+                  {/* <Trash2
                     onClick={() => handleDeleteComment(comment?._id)}
                     className="text-red-500 cursor-pointer size-4"
-                  />
+                  /> */}
+                  { comment?.userId?._id == userData?.data?._id && ( <ActionButton onDelete={() => handleDeleteComment(comment?._id)}/> )}
+             
                 </div>
                 {/* {comment?.author?._id == userData?.data?._id &&  <Trash2 onClick={() => handleDeleteComment(comment?._id)} className="text-red-500 cursor-pointer" />} */}
 
