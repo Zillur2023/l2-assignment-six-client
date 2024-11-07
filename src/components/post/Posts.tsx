@@ -145,7 +145,7 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
       {postData?.data?.length ? (
         <div className="mt-6 space-y-6 max-w-full sm:max-w-[600px] md:max-w-[700px] lg:max-w-[800px] mx-auto">
        
-            <div className="flex flex-col sm:flex-row  items-center justify-between ">
+          { !postId &&   <div className="flex flex-col sm:flex-row  items-center justify-between ">
               <input
                 type="text"
                 placeholder="Search..."
@@ -184,7 +184,7 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
                   </option>
                 ))}
               </select>
-            </div>
+            </div>  }
         
 
           {postData?.data?.map((post) => (
@@ -317,7 +317,7 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
                   <Button
                     size="sm"
                     className="flex items-center  bg-transparent hover:bg-gray-300 "
-                    onClick={() => post?._id && (handleCommentClick(post._id), setSelectedPostId(post._id))}
+                    onClick={() => handleCommentClick(post._id)}
                   >
                     <MessageCircle size={18} />
                     <span>{post?.comments?.length}</span>
@@ -336,7 +336,8 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
                 openButton={
                   <p className=" font-semibold my-3 cursor-pointer hover:underline">
                     {/* See all comments */}
-                    {comment ? "See all comment" : " "}
+                    {/* {comment ? "See all comment" : " "} */}
+                    {post?.comments?.length > 2 && comment ? "See all comment" : " "}
                   </p>
                 }
                 comment={comment ? true : false}
