@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import {
-  FieldValues,
+  // FieldValues,
   FormProvider,
   SubmitHandler,
   useForm,
@@ -12,25 +12,34 @@ import { useRouter } from "next/navigation";
 // import { useAppDispatch } from "@/redux/hooks";
 import { useForgetPasswordMutation, useLoginMutation } from "@/redux/features/auth/authApi";
 // import { setUser } from "@/redux/features/auth/authSlice";
-import Link from "next/link";
 import CustomInput from "@/components/form/CustomInput";
-import { Button } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginValidationSchema } from "@/schemas";
 // import GoogleLogin from "@/components/shared/GoogleLogin";
-import { useGetUserQuery } from "@/redux/features/user/userApi";
+// import { useGetUserQuery } from "@/redux/features/user/userApi";
 
-import { useUser } from "@/context/user.provider";
+export type ILoginUser = {
+  email: string;
+  password: string
+}
+
+// import { useUser } from "@/context/user.provider";
+import { jwtDecode } from "jwt-decode";
+import { setUser } from "@/redux/features/auth/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
 
 const LoginPage = () => {
   const router = useRouter();
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const [login] = useLoginMutation();
   const [forgetPassword] = useForgetPasswordMutation()
-  const { setIsLoading: userLoading } = useUser();
+  // const { setIsLoading: userLoading } = useUser();
+  // const { user } = useAppSelector((state: RootState) => state.auth);
+
  
 
-  const methods = useForm({
+  const methods = useForm<ILoginUser>({
     resolver: zodResolver(loginValidationSchema), // Pass the Zod resolver here
   });
 
@@ -39,42 +48,52 @@ const LoginPage = () => {
   const emailValue = watch("email");
 
   // Run the query only if emailValue is not null or empty
-  const { data: user } = useGetUserQuery(emailValue, {
-    skip: !emailValue,
-  });
+  // const { data: userData } = useGetUserQuery(emailValue, {
+  //   skip: !emailValue,
+  // });
   
-  const forgetPasswordPath = `/reset-password?email=${user?.data?.email}`
+  // const forgetPasswordPath = `/reset-password?email=${userData?.data?.email}`
  
 
 
-  const onSubmit: SubmitHandler<FieldValues> = async (formData) => {
+  const onSubmit: SubmitHandler<ILoginUser> = async (formData) => {
   
     const toastId = toast.loading("Logging in...");
 
     try {
       const res = await login(formData).unwrap();
-      if (res) {
-        userLoading(true);
+
+      if (res?.success) {
+        // userLoading(true);
         // userLoading(false); 
-        // const { token } = res.data;
-        // const user: any = jwtDecode(token);
-        // dispatch(setUser({ user, token }));
+        const { token } = res.data;
+        const user: any = jwtDecode(token);
+        dispatch(setUser({ user, token }));
         router.push("/");
         toast.success(res?.message, { id: toastId });
       }
     } catch (error: any) {
       toast.error(error?.data?.message, { id: toastId });
-    } finally {
-      // userLoading(false); 
     }
+    //  finally {
+    //   // userLoading(false); 
+    // }
   };
 
   const handleForgetPassword = async() => {
+   try {
     const res = await forgetPassword({email:emailValue})
-  
-    if(res){
-      router.push(forgetPasswordPath as string)
+
+    if(res.data?.success){
+      // router.push(forgetPasswordPath as string)
+      toast.success(res?.data?.message)
+    } else {
+     toast.error("This user not found")
     }
+   } catch (error:any) {
+    
+    toast.error(error?.data?.message)
+   }
   };
 
   return (
@@ -104,7 +123,8 @@ const LoginPage = () => {
                   </Checkbox> */}
               <Link color="primary"
                 onClick={handleForgetPassword}
-                href={`${forgetPasswordPath}`}
+                // href={`${forgetPasswordPath}`}
+                isDisabled={!emailValue}
                >
                 Forgot password?
               </Link>

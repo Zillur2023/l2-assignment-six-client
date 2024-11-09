@@ -18,13 +18,14 @@ import PostUpdate from "@/components/post/PostUpdate";
 // const PostUpdate = dynamic(import('@/components/post/PostUpdate'), { ssr: false }
 // );
 import { IUserData } from "@/type";
-import { useUser } from "@/context/user.provider";
+import { useAppSelector } from "@/redux/hooks";
+import { RootState } from "@/redux/store";
+// import { useUser } from "@/context/user.provider";
 // import dynamic from "next/dynamic";
 
 const Sidebar = () => {
   // const { user } = useUser();
-  // const { user } = useAppSelector((state: RootState) => state.auth);
-  const { user } = useUser();
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const { data: userData } = useGetUserQuery<IUserData>(user?.email, {
     skip: !user?.email,
   });

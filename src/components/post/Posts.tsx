@@ -9,7 +9,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  Image,
+  Image
 } from "@nextui-org/react";
 import {
   ThumbsUp,
@@ -34,18 +34,23 @@ import {
 } from "@/redux/features/post/postApi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { allCategoryName } from "./constant";
+import {  categoryOptions, sortOptions } from "./constant";
 import Author from "../shared/Author";
 import PostUpdate from "./PostUpdate";
 import CustomModal from "../modal/CustomModal";
 import CustomButton from "../shared/CustomButton";
 import { IPost, IPostData, IUserData } from "@/type";
 import NoDataFound from "../shared/NoDataFound";
-import { useUser } from "@/context/user.provider";
+// import { useUser } from "@/context/user.provider";
 import Comment from "../comment/Comment";
-import ActionButton from "../shared/ActionButton";
+// import ActionButton from "../shared/ActionButton";
 import { generatePDF } from "@/utils/generatePDF";
 import useDebounce from "@/hooks/debounce.hooks";
+import { useAppSelector } from "@/redux/hooks";
+import { RootState } from "@/redux/store";
+import Loading from "../UI/Loading";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 interface PostsProps {
   postId?: string;
@@ -54,22 +59,24 @@ interface PostsProps {
 
 const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
   const router = useRouter();
-  // const { user } = useAppSelector((state: RootState) => state.auth);
-  const { user } = useUser();
+  const { user } = useAppSelector((state: RootState) => state.auth);
+  // const { user } = useUser();
   const { data: userData } = useGetUserQuery<IUserData>(user?.email, {
     skip: !user?.email,
   });
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [category, setCategory] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<
-    "highestUpvotes" | "lowestUpvotes" | "highestDownvotes" | "lowestDownvotes"
-  >("highestUpvotes");
+  const [category, setCategory] = useState<string | undefined>(undefined);
+  const [sortBy, setSortBy] = useState<string | undefined>(undefined);
 
-  console.log({searchTerm})
+  console.log('category and ', category)
+  console.log(' and sortBy', sortBy,)
+
+
+
+
   
   const debounceSearch = useDebounce(searchTerm)
   
-  console.log({debounceSearch})
   
 
   const queryPost = postId
@@ -77,7 +84,7 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
     : {
         // searchTerm,
         searchTerm : debounceSearch,
-        category: category || undefined,
+        category,
         sortBy,
         isPremium: userData?.data?.isVerified ? true : undefined,
       };
@@ -89,8 +96,8 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
   const [updateFollowUnfollow] = useUpdateFollowUnfollowMutation();
   const [deletePost] = useDeletePostMutation();
   const inputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
+  const postRef = useRef<HTMLDivElement>(null); // Ref for the div to be converted to PDF
 
- 
 
   const handleCommentClick = (postId: string) => {
     inputRefs?.current[postId]?.focus();
@@ -156,10 +163,11 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
 
   return (
     <>
-      {postData?.data?.length ? (
+      { !postData ? <Loading /> : (postData?.data?.length === 0 && <NoDataFound />) }
         <div className="mt-6 space-y-6 max-w-full sm:max-w-[600px] md:max-w-[700px] lg:max-w-[800px] mx-auto">
        
-          { !postId &&   <div className="flex flex-col sm:flex-row  items-center justify-between ">
+          { !postId && postData?.data?.length > 0  &&  (
+           <div className="flex flex-col sm:flex-row  items-center justify-between ">
               <input
                 type="text"
                 placeholder="Search..."
@@ -170,39 +178,35 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
               <select
                 value={sortBy}
                 onChange={(e) =>
-                  setSortBy(
-                    e.target.value as
-                      | "highestUpvotes"
-                      | "lowestUpvotes"
-                      | "highestDownvotes"
-                      | "lowestDownvotes"
-                  )
+                  setSortBy(e.target.value) 
                 }
-                className="border rounded p-2 mb-4"
+                className=" border-medium rounded p-2 mb-4"
               >
                 <option value="">Sort</option>
-                <option value="highestUpvotes">Highest Upvotes</option>
-                <option value="lowestUpvotes">Lowest Upvotes</option>
-                <option value="highestDownvotes">Highest Downvotes</option>
-                <option value="lowestDownvotes">Lowest Downvotes</option>
-              </select>
-              <select
-                value={category || ""}
-                onChange={(e) => setCategory(e.target.value)}
-                className="border rounded p-2 mb-4"
-              >
-                <option value="">All Categories</option>
-                {allCategoryName.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
+                {sortOptions.map((sort) => (
+                  <option key={sort} value={sort}>
+                    {sort}
                   </option>
                 ))}
               </select>
-            </div>  }
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="border-medium rounded p-2 mb-4"
+              >
+                <option value="">Select category</option>
+                {categoryOptions.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </div>)  }
         
 
           {postData?.data?.map((post) => (
             <Card
+              ref={postRef}
               key={post._id}
               isFooterBlurred
               className=" w-full p-0 md:p-5 "
@@ -262,9 +266,9 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
                     </span>{" "}
                   </div>
                 )}
-                <p className=" py-2">#{post?.category} </p>
+                <p className=" py-2 text-lg font-medium">#{post?.category} </p>
                 {/* Post Title */}
-                <p className=" mb-2">{post?.title}</p>
+                <p className=" mb-3 text-xl font-medium">{post?.title}</p>
 
                 {/* Post Image */}
                 {post.image && (
@@ -352,12 +356,11 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
                 >
                    <Download size={18} onClick={() => generatePDF(post)} className="bg-gray-300 p-1 rounded-md w-full h-full" />
                 </Button> */}
-                <CustomButton
-                onClick={() => generatePDF(post)}
-                buttonId="downloadPDF"
-                >
-                  <Download size={18} />
-                </CustomButton>
+                 <Button
+                  size="sm"
+                  className="flex items-center  bg-transparent hover:bg-gray-300 "
+                  onClick={() => generatePDF(postRef)}
+                > <Download size={18}/> </Button>
               </CardFooter>
               <Comment
                 postId={post?._id}
@@ -374,9 +377,7 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
             </Card>
           ))}
         </div>
-      ) : (
-        <NoDataFound />
-      )}
+    
     </>
   );
 };

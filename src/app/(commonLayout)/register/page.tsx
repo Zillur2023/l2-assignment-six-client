@@ -6,13 +6,19 @@ import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useCreateUserMutation } from "@/redux/features/user/userApi";
-import { FieldValues, SubmitHandler } from "react-hook-form";
+import { SubmitHandler } from "react-hook-form";
 import CustomForm from "@/components/form/CustomForm";
 import CustomInput from "@/components/form/CustomInput";
 import { Button } from "@nextui-org/react";
 import Link from "next/link";
 import { ChangeEvent, useState } from "react";
 import { registerValidationSchema } from "@/schemas";
+
+export type IRegisterUser = {
+  name: string;
+  email: string;
+  password: string
+}
 
 const RegisterPage: React.FC = () => {
 
@@ -22,7 +28,7 @@ const RegisterPage: React.FC = () => {
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
 
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+  const onSubmit: SubmitHandler<IRegisterUser> = async (data) => {
     const formData = new FormData();
     formData.append("data",JSON.stringify(data))
     formData.append("image", imageFiles?.[0])
@@ -32,7 +38,8 @@ const RegisterPage: React.FC = () => {
    try {
     const res = await createUser(formData).unwrap();
 
-    if (res) {
+
+    if (res?.success) {
       toast.success(res?.message, {id: toastId});
       router.push("/login");
     } 

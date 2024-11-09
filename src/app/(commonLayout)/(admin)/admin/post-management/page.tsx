@@ -250,8 +250,8 @@ const PostManagement: React.FC = () => {
                 onSelectionChange={setCategoryFilter}
               >
                 {categoryOptions.map((category) => (
-                  <DropdownItem key={category.uid} className="capitalize">
-                    {capitalize(category.name)}
+                  <DropdownItem key={category} className="capitalize">
+                    {capitalize(category)}
                   </DropdownItem>
                 ))}
               </DropdownMenu>

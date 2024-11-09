@@ -50,9 +50,9 @@ export interface IComment {
     variant?: "flat" | "bordered" | "faded" | "underlined";
     size?: "sm" | "md" | "lg";
     required?: boolean;
-    type?: string;
+    type?: string ;
     label: string;
-    name: string;
+    name: string ;
     disabled?: boolean;
   }
 

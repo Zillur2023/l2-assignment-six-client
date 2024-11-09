@@ -25,10 +25,13 @@ const ResetPasswordForm: React.FC = () => {
   const { handleSubmit, setValue } = methods;
 
   useEffect(() => {
-    if (emailQuery) {
+    if (!tokenQuery) {
+      // router.push("/login");
+      // toast.error("User not found");
+    } else if (emailQuery) {
       setValue("email", emailQuery);
     }
-  }, [emailQuery, setValue]);
+  }, [emailQuery, tokenQuery, router, setValue]);
 
   const onSubmit: SubmitHandler<FieldValues> = async (formData) => {
     const data = {
@@ -40,7 +43,8 @@ const ResetPasswordForm: React.FC = () => {
 
     try {
       const res = await resetPassword(data).unwrap();
-      if (res) {
+
+      if (res.success) {
         router.push("/login");
         toast.success(res?.message, { id: toastId });
       }

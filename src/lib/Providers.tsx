@@ -10,14 +10,14 @@ import { Toaster } from "sonner";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "@/redux/store";
 // import { store } from "@/redux/store";
-import UserProvider from "@/context/user.provider";
+// import UserProvider from "@/context/user.provider";
 
 
 
 export default function Providers({ children}:{ children: React.ReactNode } ) {
   // 2. Wrap NextUIProvider at the root of your app
   return (
-      <UserProvider>
+      // <UserProvider>
     <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <NextUIProvider>
@@ -28,6 +28,6 @@ export default function Providers({ children}:{ children: React.ReactNode } ) {
       </NextUIProvider>
     </PersistGate>
   </Provider>
-      </UserProvider>
+      // </UserProvider>
   );
 }

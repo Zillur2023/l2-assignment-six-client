@@ -31,4 +31,9 @@ export const getAccessToken =  async() => {
 
   return result
 }
+export const setToken =  async() => {
+  const result = cookies().get("accessToken")?.value;
+
+  return result
+}
 

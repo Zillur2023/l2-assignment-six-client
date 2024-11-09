@@ -17,16 +17,17 @@ import {
   NavbarMenuItem,
   NavbarMenuToggle,
   Spinner,
+  Image,
 } from "@nextui-org/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
-import { logoutFromRedux } from "@/redux/features/auth/authSlice";
+import { logout } from "@/redux/features/auth/authSlice";
 import { useGetUserQuery } from "@/redux/features/user/userApi";
-import { getUser, logout } from "@/services/AuthSerivce";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ThemeSwitch } from "../UI/ThemeSwitch";
-import { useUser } from "@/context/user.provider";
+// import { useUser } from "@/context/user.provider";
+// import logoImage from "../../assests/a-creative-traveling-logo-design-vector-removebg-preview.png"
 
 export const adminRoutes = [
   { href: "/admin/user-management", label: "User management" },
@@ -53,8 +54,8 @@ export const publicRoutes = [
 // export default function  NavBar() {
 const NavBar = () => {
   const router = useRouter();
-  // const { user } = useAppSelector((state: RootState) => state.auth);
-  const { user, setIsLoading: userLoading } = useUser();
+  const { user } = useAppSelector((state: RootState) => state.auth);
+  // const { user, setIsLoading: userLoading } = useUser();
   
   // const user = await getUser()
   const { data: userData } = useGetUserQuery(user?.email, {
@@ -73,29 +74,31 @@ const NavBar = () => {
 
   const handleLogout = async () => {
     setIsLoadingLogout(true);
-    userLoading(true);
+    // userLoading(true);
     try {
       // Force the cookie deletion and proceed only if successful
-      // dispatch(logoutFromRedux());
-      await logout();
+      dispatch(logout());
+      // await logout();
       router.push("/");
       // Dispatch the Redux logout action
     } catch (error) {
       toast.error("Error logout try again");
       // Handle any potential errors during logout
     } finally {
-      userLoading(false);
+      // userLoading(false);
       setIsLoadingLogout(false);
     }
   };
 
   return (
     <Navbar disableAnimation isBordered>
-      <NavbarContent className="sm:hidden" justify="start">
+      { !user && <NavbarContent className="sm:hidden" justify="start">
         <NavbarMenuToggle />
-      </NavbarContent>
+      </NavbarContent> }
       <NavbarBrand>
-        <p className="font-bold text-inherit">ACME</p>
+     
+        <p className="font-bold text-inherit">Beyond Borders</p>
+        {/* <Image width="100%" height="100%" src={"../../assests/a-creative-traveling-logo-design-vector-removebg-preview.png"} alt="logoImage" /> */}
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         {routes.map((route) => (

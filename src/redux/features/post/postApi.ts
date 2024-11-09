@@ -23,8 +23,9 @@ export const postApi = baseApi.injectEndpoints({
         userId?: string;
         searchTerm?: string; // Optional searchTerm
         category?: string;   // Optional category
-        sortBy?: "highestUpvotes" | "lowestUpvotes" | "highestDownvotes" | "lowestDownvotes" // Optional sortBy
-        isPremium?: boolean 
+        // sortBy?: "highestUpvotes" | "lowestUpvotes" | "highestDownvotes" | "lowestDownvotes" 
+        sortBy?: string; 
+        isPremium?: boolean; 
       }) => {
         let url = '/post/all-post'; // Base URL
     

@@ -3,27 +3,45 @@
 // import { useAppSelector } from "@/redux/hooks";
 // import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Posts from "../post/Posts";
-import { useUser } from "@/context/user.provider";
+// import { useUser } from "@/context/user.provider";
+import { useAppSelector } from "@/redux/hooks";
+import { RootState } from "@/redux/store";
+import Loading from "../UI/Loading";
 
 const CommonLayoutPage = () => {
     const router = useRouter();
-    // const { user } = useAppSelector((state: RootState) => state.auth);
-    const { user } = useUser();
+    const { user } = useAppSelector((state: RootState) => state.auth);
+    // const { user } = useUser();
+    const [loading, setLoading] = useState(false); 
 
-  
-  
     useEffect(() => {
-      // If not loading and userData is available
-      if ( user ) {
-        if (user?.role === "admin") {
-          router.push("/admin/user-management");
-        } else if (user?.role === "user") {
-          router.push("/profile/news-feed");
+      const redirectUser = async () => {
+        // Show loading spinner
+        setLoading(true);
+  
+        // Redirect user based on role
+        if (user !== undefined) {
+          if (user) {
+            if (user.role === "admin") {
+               router.push("/admin/user-management");
+            } else if (user.role === "user") {
+               router.push("/profile/news-feed");
+            }
+          }
         }
-      }
+        
+        // Hide loading spinner after navigation
+        setLoading(false);
+      };
+  
+      redirectUser();
     }, [user, router]);
+
+    if (loading) {
+      return <Loading/>; // Replace with your spinner component or animation
+    }
   
     // Render <Posts /> if user is null (not logged in)
     if (user === null) {

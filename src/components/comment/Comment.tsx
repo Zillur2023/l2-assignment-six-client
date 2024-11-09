@@ -21,10 +21,12 @@ import { toast } from "sonner";
 import CustomModal from "../modal/CustomModal";
 import CustomInput from "../form/CustomInput";
 import Posts from "../post/Posts";
-import { useUser } from "@/context/user.provider";
+// import { useUser } from "@/context/user.provider";
 import ActionButton from "../shared/ActionButton";
 import { useRouter } from "next/navigation";
 import { IComment } from "@/type";
+import { useAppSelector } from "@/redux/hooks";
+import { RootState } from "@/redux/store";
 // import LoadingButton from '../shared/LoadingButton';
 
 interface CommentProps {
@@ -35,9 +37,9 @@ interface CommentProps {
 }
 
 const Comment: React.FC<CommentProps> = ({ postId, openButton, comment, focusRef }) => {
-  // const { user } = useAppSelector((state: RootState) => state.auth);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const router = useRouter()
-  const { user } = useUser();
+  // const { user } = useUser();
   const { data: userData } = useGetUserQuery(user?.email, {
     skip: !user?.email,
   });

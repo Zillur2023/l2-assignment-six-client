@@ -7,12 +7,15 @@ import { toast } from 'sonner';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CustomInput from '@/components/form/CustomInput';
 import { changePasswordValidationSchema } from '@/schemas';
-import { useUser } from '@/context/user.provider';
+// import { useUser } from '@/context/user.provider';
 import { useChangePasswordMutation } from '@/redux/features/auth/authApi';
+import { useAppSelector } from '@/redux/hooks';
+import { RootState } from '@/redux/store';
 
 
 const ChangePassword: React.FC = () => {
-  const {user} = useUser()
+  // const { user } = useUser()
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const [changePassword] = useChangePasswordMutation();
   // const [email, setEmail] = useState(user?.email, {skip: !user?.email,
   // })

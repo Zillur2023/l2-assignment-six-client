@@ -6,10 +6,11 @@ import { useFormContext } from "react-hook-form";
 // import { IInput } from "@/src/types";
 
 interface IProps extends IInput {
-  options: {
-    uid: string;
-    name: string;
-  }[];
+  // options: {
+  //   uid: string;
+  //   name: string;
+  // }[];
+  options: string[]
   value?: string
 }
 
@@ -36,7 +37,7 @@ export default function CustomSelect({
       value={value}
     >
       {options.map((option) => (
-        <SelectItem key={option.uid}>{option.name}</SelectItem>
+        <SelectItem key={option}>{option}</SelectItem>
       ))}
     </Select>
   );

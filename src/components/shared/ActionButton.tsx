@@ -18,8 +18,8 @@ const ActionButton: React.FC<ActionButtonProps> = ({onEdit, onDelete}) => {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem onClick={onEdit}>Edit</DropdownItem>
-                <DropdownItem onClick={onDelete}>Delete</DropdownItem>
+                <DropdownItem onClick={onEdit} key="edit">Edit</DropdownItem>
+                <DropdownItem onClick={onDelete} key="logout" className="text-danger" color="danger">Delete</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>

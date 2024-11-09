@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useState, ChangeEvent, ReactNode } from "react";
+import React, { useState, ChangeEvent, ReactNode, useEffect } from "react";
 import {
   // Controller,
   FieldValues,
@@ -23,15 +23,17 @@ import { toast } from "sonner";
 import CustomModal from "../modal/CustomModal";
 import CustomInput from "../form/CustomInput";
 import CustomSelect from "../form/CustomSelect";
-import { categoryOptions } from "./constant";
+import { categoryOptions, formats, modules } from "./constant";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { postUpdateValidationSchema } from "@/schemas";
 import { Checkbox } from "@nextui-org/react";
 import { IPost, IUserData } from "@/type";
-import { useUser } from "@/context/user.provider";
+// import { useUser } from "@/context/user.provider";
 // import ReactQuill from "react-quill";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import dynamic from "next/dynamic";
+import { useAppSelector } from "@/redux/hooks";
+import { RootState } from "@/redux/store";
 // import useDebounce from "@/hooks/debounce.hooks";
 
 interface UpdatePostProps {
@@ -47,8 +49,8 @@ interface UpdatePostProps {
 // };
 
 const PostUpdate: React.FC<UpdatePostProps> = ({ updatePostData, btn }) => {
-  // const { user } = useAppSelector((state: RootState) => state.auth);
-  const { user } = useUser();
+  const { user } = useAppSelector((state: RootState) => state.auth);
+  // const { user } = useUser();
   const { data: userData } = useGetUserQuery<IUserData>(user?.email, { skip: !user?.email});
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
@@ -78,15 +80,15 @@ const PostUpdate: React.FC<UpdatePostProps> = ({ updatePostData, btn }) => {
   // const contentValue = useDebounce(content);
 
   // Populate form when updating
-  // useEffect(() => {
-  //   if (postData) {
-  //     setValue("isPremium", postData?.data?.[0]?.isPremium)
-  //     setValue("title", postData?.data?.[0]?.title);
-  //     setValue("category", postData?.data?.[0]?.category);
-  //     // setValue("content", updatePostData?.content);
-  //     // setValue("content", contentValue);
-  //   }
-  // }, [postData, setValue, ]);
+  useEffect(() => {
+    if (updatePostData) {
+      setValue("isPremium", updatePostData?.isPremium)
+      setValue("title", updatePostData?.title);
+      setValue("category", updatePostData?.category);
+      setValue("content", updatePostData?.content);
+      // setValue("content", contentValue);
+    }
+  }, [updatePostData, setValue, ]);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
 
@@ -140,6 +142,8 @@ const PostUpdate: React.FC<UpdatePostProps> = ({ updatePostData, btn }) => {
     }
   };
 
+
+
   return (
     <CustomModal
       // buttonText="Edit Profile"
@@ -191,6 +195,8 @@ const PostUpdate: React.FC<UpdatePostProps> = ({ updatePostData, btn }) => {
               onChange={(value) => setValue("content", value)}
               // value={contentValue}
               // onChange={useDebounce((value) => setContentValue(value))}
+              modules={modules}
+              formats={formats}
               placeholder="Write your post here..."
             />
           </div>

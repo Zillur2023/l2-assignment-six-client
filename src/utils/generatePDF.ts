@@ -1,57 +1,44 @@
-import { IPost } from "@/type";
-import { jsPDF } from "jspdf";
+import domtoimage from "dom-to-image";
+import jsPDF from "jspdf";
 
-// export const generatePDF = (post: IPost) => {
-//     const doc = new jsPDF();
-//     doc.setFontSize(16);
-//     doc.text(post.title, 10, 10);
-//     doc.setFontSize(12);
-//     doc.text(`Category: ${post.category}`, 10, 20);
-//     doc.text(`Author: ${post.author.name}`, 10, 30);
-//     doc.text(`Content: ${post.content}`, 10, 40);
-//     if (post.isPremium) {
-//       doc.text("Premium Post", 10, 50);
-//     }
-//     doc.save(`${post.title}.pdf`);
-//   };
+export const generatePDF = async (elementRef: React.RefObject<HTMLDivElement>) => {
+  if (elementRef.current) {
+    try {
+      // Capture the div as an image
+      // const dataUrl = await domtoimage.toPng(elementRef.current, { useCORS: true });
+      // const dataUrl = await domtoimage.toPng(elementRef.current, {  bgcolor: '#ffffff' });
+      const dataUrl = await domtoimage.toPng(elementRef.current);
+      
+      const pdf = new jsPDF("p", "pt", "a4");
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const pageWidth = pdf.internal.pageSize.getWidth();
 
-export const generatePDF = async(post:IPost) => {
-    const doc = new jsPDF();
-  
-    // Header
-    doc.setFontSize(16);
-    doc.text(post.author.name, 10, 10);
-    doc.setFontSize(12);
-    doc.text(post.category, 10, 20);
-    doc.setFontSize(10);
-    doc.text(post.createdAt, 10, 30);
-  
-    // Content
-    doc.setFontSize(14);
-    doc.text(post.title, 10, 40);
-    doc.setFontSize(12);
-    doc.text(post.content, 10, 50);
-  
-    // Image (if available)
-    if (post.image) {
-      // Add image using doc.addImage()
+      const imgWidth = pageWidth;
+      const imgHeight = (elementRef.current.clientHeight * imgWidth) / elementRef.current.clientWidth;
+
+      let positionY = 0; // Initial Y position on the PDF
+
+      // Loop to add new pages if content exceeds one page
+      while (positionY < imgHeight) {
+        pdf.addImage(
+          dataUrl,
+          "PNG",
+          0,
+          -positionY, // Move the image up by the current Y position
+          imgWidth,
+          imgHeight
+        );
+
+        positionY += pageHeight; // Move to the next page's height
+
+        if (positionY < imgHeight) {
+          pdf.addPage();
+        }
+      }
+
+      pdf.save("post.pdf"); // Download the PDF
+    } catch (error) {
+      console.error("Failed to generate PDF", error);
     }
-  
-    // Comments
-    doc.setFontSize(12);
-    // doc.text(`'Upvotes:': ${post.upvotes}`, 10, 80);
-    // doc.text(`'Downvotes:': ${post.downvotes.length}`, 10, 80);
-    // doc.text(`'Comments:': ${post.comments.length}`, 10, 80);
-    // post.comments.forEach((comment, index) => {
-    //   doc.setFontSize(10);
-    // //   doc.text(`${comment?.author.name}: ${comment.content}`, 10, 90 + 15 * index);
-    //   doc.text(`${comment?.author.name}: ${comment.content}`, 10, 90 + 15 * index);
-    // });
-
-  
-    // Footer
-    // Add buttons and comment box using doc.rect() and doc.text()
-  
-    doc.save(`${post.title}.pdf`);
-  };
-  
+  }
+};
