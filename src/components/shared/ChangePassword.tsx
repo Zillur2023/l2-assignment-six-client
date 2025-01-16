@@ -9,13 +9,12 @@ import CustomInput from '@/components/form/CustomInput';
 import { changePasswordValidationSchema } from '@/schemas';
 // import { useUser } from '@/context/user.provider';
 import { useChangePasswordMutation } from '@/redux/features/auth/authApi';
-import { useAppSelector } from '@/redux/hooks';
-import { RootState } from '@/redux/store';
+import { useUser } from '@/context/user.provider';
 
 
 const ChangePassword: React.FC = () => {
-  // const { user } = useUser()
-  const { user } = useAppSelector((state: RootState) => state.auth);
+  // const { user } = useAppSelector((state: RootState) => state.auth);
+  const { user } = useUser()
   const [changePassword] = useChangePasswordMutation();
   // const [email, setEmail] = useState(user?.email, {skip: !user?.email,
   // })

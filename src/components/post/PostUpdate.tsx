@@ -32,8 +32,7 @@ import { IPost, IUserData } from "@/type";
 // import ReactQuill from "react-quill";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import dynamic from "next/dynamic";
-import { useAppSelector } from "@/redux/hooks";
-import { RootState } from "@/redux/store";
+import { useUser } from "@/context/user.provider";
 // import useDebounce from "@/hooks/debounce.hooks";
 
 interface UpdatePostProps {
@@ -49,8 +48,8 @@ interface UpdatePostProps {
 // };
 
 const PostUpdate: React.FC<UpdatePostProps> = ({ updatePostData, btn }) => {
-  const { user } = useAppSelector((state: RootState) => state.auth);
-  // const { user } = useUser();
+  // const { user } = useAppSelector((state: RootState) => state.auth);
+  const { user } = useUser();
   const { data: userData } = useGetUserQuery<IUserData>(user?.email, { skip: !user?.email});
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);

@@ -18,24 +18,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginValidationSchema } from "@/schemas";
 // import GoogleLogin from "@/components/shared/GoogleLogin";
 // import { useGetUserQuery } from "@/redux/features/user/userApi";
+import { useUser } from "@/context/user.provider";
+import { setToken } from "@/services/AuthSerivce";
 
 export type ILoginUser = {
   email: string;
   password: string
 }
 
-// import { useUser } from "@/context/user.provider";
-import { jwtDecode } from "jwt-decode";
-import { setUser } from "@/redux/features/auth/authSlice";
-import { useAppDispatch } from "@/redux/hooks";
-
 const LoginPage = () => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const [login] = useLoginMutation();
   const [forgetPassword] = useForgetPasswordMutation()
-  // const { setIsLoading: userLoading } = useUser();
   // const { user } = useAppSelector((state: RootState) => state.auth);
+  const { setIsLoading: userLoading } = useUser();
 
  
 
@@ -64,11 +61,14 @@ const LoginPage = () => {
       const res = await login(formData).unwrap();
 
       if (res?.success) {
-        // userLoading(true);
+        userLoading(true);
         // userLoading(false); 
-        const { token } = res.data;
-        const user: any = jwtDecode(token);
-        dispatch(setUser({ user, token }));
+        // const { token } = res.data;
+        // const user: any = jwtDecode(token);
+        // dispatch(setUser({ user, token }));
+        // console.log('res....DATA',res?.data)
+        const userlogin = setToken(res?.data)
+        console.log({userlogin})
         router.push("/");
         toast.success(res?.message, { id: toastId });
       }
@@ -76,7 +76,7 @@ const LoginPage = () => {
       toast.error(error?.data?.message, { id: toastId });
     }
     //  finally {
-    //   // userLoading(false); 
+      // userLoading(false); 
     // }
   };
 

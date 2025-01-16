@@ -2,8 +2,21 @@
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 
+export const setToken = ({
+  accessToken,
+  refreshToken,
+}: {
+  accessToken: string;
+  refreshToken: string;
+}) => {
+  cookies().set("accessToken", accessToken);
+  cookies().set("refreshToken", refreshToken);
+};
+
 export const getUser = async () => {
-  const token = cookies().get("refreshToken")?.value;
+  const token = cookies().get("accessToken")?.value;
+
+  console.log("get accessToken from cookies ", token);
 
   let decodedToken = null;
 
@@ -14,26 +27,18 @@ export const getUser = async () => {
   return decodedToken;
 };
 
-// export const logout = (): Promise<void> => {
-//   return new Promise((resolve) => {
-//     cookies().delete("accessToken");  // Perform the deletion
-//     resolve();  // Immediately resolve the promise
-//   });
-// };
-
-export const logout =  async() => {
+export const logout = async () => {
   cookies().delete("accessToken");
   cookies().delete("refreshToken");
 };
 
-export const getAccessToken =  async() => {
+export const getAccessToken = async () => {
   const result = cookies().get("accessToken")?.value;
 
-  return result
-}
-export const setToken =  async() => {
-  const result = cookies().get("accessToken")?.value;
+  return result;
+};
+export const setAccessToken = async (token: string) => {
+  const result = cookies().set("accessToken", token);
 
-  return result
-}
-
+  return result;
+};

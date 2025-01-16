@@ -19,14 +19,14 @@ import {
   Spinner,
   Image,
 } from "@nextui-org/react";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { RootState } from "@/redux/store";
-import { logout } from "@/redux/features/auth/authSlice";
+import { useAppDispatch, } from "@/redux/hooks";
 import { useGetUserQuery } from "@/redux/features/user/userApi";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ThemeSwitch } from "../UI/ThemeSwitch";
-// import { useUser } from "@/context/user.provider";
+import { useUser } from "@/context/user.provider";
+import { logout } from "@/services/AuthSerivce";
+import Sidebar from "../UI/Sidebar";
 // import logoImage from "../../assests/a-creative-traveling-logo-design-vector-removebg-preview.png"
 
 export const adminRoutes = [
@@ -54,10 +54,10 @@ export const publicRoutes = [
 // export default function  NavBar() {
 const NavBar = () => {
   const router = useRouter();
-  const { user } = useAppSelector((state: RootState) => state.auth);
-  // const { user, setIsLoading: userLoading } = useUser();
+  // const { user } = useAppSelector((state: RootState) => state.auth);
+  const { user, setIsLoading: userLoading } = useUser();
   
-  // const user = await getUser()
+  // console.log("nabvar USER --->", user)
   const { data: userData } = useGetUserQuery(user?.email, {
     skip: !user?.email,
   });
@@ -74,18 +74,18 @@ const NavBar = () => {
 
   const handleLogout = async () => {
     setIsLoadingLogout(true);
-    // userLoading(true);
+    userLoading(true);
     try {
       // Force the cookie deletion and proceed only if successful
-      dispatch(logout());
-      // await logout();
+      // dispatch(logout());
+      await logout();
       router.push("/");
       // Dispatch the Redux logout action
     } catch (error) {
       toast.error("Error logout try again");
       // Handle any potential errors during logout
     } finally {
-      // userLoading(false);
+      userLoading(false);
       setIsLoadingLogout(false);
     }
   };
@@ -151,14 +151,15 @@ const NavBar = () => {
         )}
       </NavbarContent>
       <NavbarMenu>
-        {routes.map((route) => (
+        {/* {routes.map((route) => (
           <NavbarMenuItem
             key={route.href}
             isActive={pathname === route.href} // Use pathname to check if the route is active
           >
             <Link href={route.href}>{route.label}</Link>
           </NavbarMenuItem>
-        ))}
+        ))} */}
+        <Sidebar/>
       </NavbarMenu>
     </Navbar>
   );

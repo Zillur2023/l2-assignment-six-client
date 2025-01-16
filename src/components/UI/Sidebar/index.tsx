@@ -3,8 +3,6 @@
 import Image from "next/image";
 import { SidebarOptions } from "./SidebarOptions";
 import { adminLinks, userLinks } from "./constant";
-// import { useAppSelector } from "@/redux/hooks";
-// import { RootState } from "@/redux/store";
 import {
   useGetUserQuery,
   useUpdateVerifiedMutation,
@@ -18,14 +16,13 @@ import PostUpdate from "@/components/post/PostUpdate";
 // const PostUpdate = dynamic(import('@/components/post/PostUpdate'), { ssr: false }
 // );
 import { IUserData } from "@/type";
-import { useAppSelector } from "@/redux/hooks";
-import { RootState } from "@/redux/store";
+import { useUser } from "@/context/user.provider";
 // import { useUser } from "@/context/user.provider";
 // import dynamic from "next/dynamic";
 
 const Sidebar = () => {
-  // const { user } = useUser();
-  const { user } = useAppSelector((state: RootState) => state.auth);
+  // const { user } = useAppSelector((state: RootState) => state.auth);
+  const { user } = useUser();
   const { data: userData } = useGetUserQuery<IUserData>(user?.email, {
     skip: !user?.email,
   });

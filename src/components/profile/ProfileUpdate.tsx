@@ -8,15 +8,14 @@ import { toast } from "sonner";
 import { useGetUserQuery, useUpdateProfileMutation } from "@/redux/features/user/userApi";
 import CustomInput from "../form/CustomInput";
 import CustomModal from "../modal/CustomModal";
-import { useAppSelector } from "@/redux/hooks";
-import { RootState } from "@/redux/store";
+import { useUser } from "@/context/user.provider";
 // import { useUser } from "@/context/user.provider";
 
 
 
 const UpdateProfileModal = () => {
-  const { user } = useAppSelector((state: RootState) => state.auth);
-  // const { user } = useUser();
+  // const { user } = useAppSelector((state: RootState) => state.auth);
+  const { user } = useUser();
   const { data: userData } = useGetUserQuery(user?.email, { skip: !user?.email });
   const [updateProfile] = useUpdateProfileMutation();
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);

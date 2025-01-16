@@ -6,15 +6,16 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Posts from "../post/Posts";
 // import { useUser } from "@/context/user.provider";
-import { useAppSelector } from "@/redux/hooks";
-import { RootState } from "@/redux/store";
 import Loading from "../UI/Loading";
+import { useUser } from "@/context/user.provider";
 
 const CommonLayoutPage = () => {
     const router = useRouter();
-    const { user } = useAppSelector((state: RootState) => state.auth);
-    // const { user } = useUser();
+    // const { user } = useAppSelector((state: RootState) => state.auth);
+    const { user } = useUser();
     const [loading, setLoading] = useState(false); 
+
+    console.log("commonLayout USER--->", user)
 
     useEffect(() => {
       const redirectUser = async () => {

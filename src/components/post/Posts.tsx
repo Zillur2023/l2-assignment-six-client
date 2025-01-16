@@ -39,18 +39,13 @@ import Author from "../shared/Author";
 import PostUpdate from "./PostUpdate";
 import CustomModal from "../modal/CustomModal";
 import CustomButton from "../shared/CustomButton";
-import { IPost, IPostData, IUserData } from "@/type";
+import { IPostData, IUserData } from "@/type";
 import NoDataFound from "../shared/NoDataFound";
-// import { useUser } from "@/context/user.provider";
 import Comment from "../comment/Comment";
-// import ActionButton from "../shared/ActionButton";
 import { generatePDF } from "@/utils/generatePDF";
 import useDebounce from "@/hooks/debounce.hooks";
-import { useAppSelector } from "@/redux/hooks";
-import { RootState } from "@/redux/store";
 import Loading from "../UI/Loading";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+import { useUser } from "@/context/user.provider";
 
 interface PostsProps {
   postId?: string;
@@ -59,8 +54,8 @@ interface PostsProps {
 
 const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
   const router = useRouter();
-  const { user } = useAppSelector((state: RootState) => state.auth);
-  // const { user } = useUser();
+  // const { user } = useAppSelector((state: RootState) => state.auth);
+  const { user } = useUser();
   const { data: userData } = useGetUserQuery<IUserData>(user?.email, {
     skip: !user?.email,
   });
@@ -68,8 +63,8 @@ const Posts: React.FC<PostsProps> = ({ postId , comment = true }) => {
   const [category, setCategory] = useState<string | undefined>(undefined);
   const [sortBy, setSortBy] = useState<string | undefined>(undefined);
 
-  console.log('category and ', category)
-  console.log(' and sortBy', sortBy,)
+  // console.log('category and ', category)
+  // console.log(' and sortBy', sortBy,)
 
 
 
