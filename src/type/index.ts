@@ -1,62 +1,74 @@
 import { SVGProps } from "react";
 
+// export interface IUser {
+//     _id: string;
+//     name: string;
+//     email: string;
+//     image: string;
+//     followers: string[];
+//     following: string[];
+//     isVerified: boolean;
+//     role: 'admin' | 'user';
+//     paymentStatus?: 'Pending' | 'Paid' | 'Failed';
+//     transactionId?: string;
+
+//   }
 export interface IUser {
-    _id: string;
-    name: string;
-    email: string;
-    image: string;
-    followers: string[]; 
-    following: string[]; 
-    isVerified: boolean;
-    role: 'admin' | 'user'; 
-    paymentStatus?: 'Pending' | 'Paid' | 'Failed';
-    transactionId?: string;
- 
-  }
+  _id: string;
+  name: string;
+  email: string;
+  bio?: string;
+  profileImage?: string;
+  coverImage?: string;
+  followers: string[];
+  following: string[];
+  isVerified: boolean;
+  role: "admin" | "user";
+  paymentStatus?: "Pending" | "Paid" | "Failed";
+  transactionId?: string;
+}
 
 export interface IUserData {
-  data: {data: IUser}
+  data: { data: IUser };
 }
 
 export interface IPost {
   _id: string;
-  author: IUser; 
+  author: IUser;
   title: string;
   category: string;
   content: string;
-  image?: string; 
-  isPremium: boolean; 
+  image?: string;
+  isPremium: boolean;
   upvotes: IUser[];
-  downvotes: IUser[]; 
-  comments:IComment[];
-  createdAt: string; 
+  downvotes: IUser[];
+  comments: IComment[];
+  createdAt: string;
   updatedAt: string;
 }
 
 export interface IPostData {
-  data: {data: IPost[]}
+  data: { data: IPost[] };
 }
 
 export interface IComment {
   _id: string;
-  postId: IPost; 
-  userId: IUser; 
-  commentText: string; 
-  // parentCommentId?: Types.ObjectId | null; 
+  postId: IPost;
+  userId: IUser;
+  commentText: string;
+  // parentCommentId?: Types.ObjectId | null;
 }
 
+export interface IInput {
+  variant?: "flat" | "bordered" | "faded" | "underlined";
+  size?: "sm" | "md" | "lg";
+  required?: boolean;
+  type?: string;
+  label: string;
+  name: string;
+  disabled?: boolean;
+}
 
-  export interface IInput {
-    variant?: "flat" | "bordered" | "faded" | "underlined";
-    size?: "sm" | "md" | "lg";
-    required?: boolean;
-    type?: string ;
-    label: string;
-    name: string ;
-    disabled?: boolean;
-  }
-
-  export type IconSvgProps = SVGProps<SVGSVGElement> & {
-    size?: number;
-  };
-
+export type IconSvgProps = SVGProps<SVGSVGElement> & {
+  size?: number;
+};
